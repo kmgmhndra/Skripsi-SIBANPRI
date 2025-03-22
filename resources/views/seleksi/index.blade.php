@@ -68,10 +68,10 @@
                 @foreach($hasilSeleksi as $index => $tani)
                 <tr class="hover:bg-gray-100">
                     <td class="border px-4 py-2">{{ $index + 1 }}</td>
-                    <td class="border px-4 py-2">{{ $tani['nama'] }}</td>
+                    <td class="border px-4 py-2">{{ $tani['nama_kelompok_tani'] }}</td>
                     <td class="border px-4 py-2">{{ $tani['ketua'] }}</td>
                     <td class="border px-4 py-2">{{ $tani['desa'] }}</td>
-                    <td class="border px-4 py-2 text-center">{{ number_format($tani['nilai'], 4) }}</td>
+                    <td class="border px-4 py-2 text-center">{{ number_format($tani['nilai_wpm'], 4) }}</td>
                     <td class="border px-4 py-2 text-center">{{ $index + 1 }}</td>
                     <td class="border px-4 py-2 text-center">
                         <input type="checkbox" name="kelompok_tani_id[]" value="{{ $tani['id'] }}">

@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::table('seleksi', function (Blueprint $table) {
             $table->foreignId('kecamatan_id')->constrained('kecamatan')->onDelete('cascade');
             $table->string('nama_kelompok_tani');
+            $table->foreignId('kelompok_tani_id');
             $table->string('ketua');
             $table->string('desa');
             $table->decimal('nilai_wpm', 8, 4); // Menyimpan nilai hasil seleksi

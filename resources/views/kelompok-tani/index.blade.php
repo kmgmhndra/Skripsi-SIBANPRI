@@ -63,11 +63,13 @@
                     <th class="border p-2">Nama Kelompok</th>
                     <th class="border p-2">Nama Ketua</th>
                     <th class="border p-2">Desa</th>
-                    <th class="border p-2">Simluhtan</th>
-                    <th class="border p-2">Terpoligon</th>
-                    <th class="border p-2">Bantuan Sebelumnya</th>
-                    <th class="border p-2">DPI</th>
-                    <th class="border p-2">Provitas</th>
+
+                    @foreach ($kriterias as $kriteria)
+                    <th class="border p-2">{{$kriteria->nama}}</th>
+
+                    @endforeach
+
+            
                     <th class="border p-2">Aksi</th>
                 </tr>
             </thead>
@@ -77,15 +79,13 @@
                     <td class="border p-2">{{ $item->nama }}</td>
                     <td class="border p-2">{{ $item->ketua }}</td>
                     <td class="border p-2">{{ $item->desa }}</td>
-                    <td class="border p-2">{{ $item->simluhtan }}</td>
-                    <td class="border p-2">{{ $item->terpoligon }}</td>
-                    <td class="border p-2">{{ $item->bantuan_sebelumnya }}</td>
-                    <td class="border px-4 py-2">
-                        {{ number_format($item->dpi, ($item->dpi == floor($item->dpi)) ? 0 : 2) }}
-                    </td>
-                    <td class="border px-4 py-2">
-                        {{ number_format($item->provitas, ($item->provitas == floor($item->provitas)) ? 0 : 2) }}
-                    </td>
+             
+                    @foreach ($kriterias as $kriteria)
+        <td class="border p-2 text-center">
+            {{ $kriteriaValuesArray[$item->id][$kriteria->id] ?? '-' }}
+        </td>
+        @endforeach
+                 
                     <td class="border p-2">
                         <button onclick="editKelompokTani({{ $item->id }})"
                             class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">
@@ -129,9 +129,10 @@
                 <form id="seleksiForm" action="{{ route('seleksi.proses') }}" method="POST">
                     @csrf
                     <!-- Input hidden untuk mengirim kecamatan_id -->
-                    <input type="hidden" name="kecamatan_id" id="seleksiKecamatanId" value="">
+                    <input type="hidden" name="kecamatan_id" id="selectMulai" value="">
                     <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
                         Mulai
+
                     </button>
                 </form>
             </div>
@@ -172,31 +173,13 @@
                 <input type="text" name="ketua" placeholder="Nama Ketua..." class="w-full p-2 border rounded" required>
             </div>
 
+            @foreach ($kriterias as $kriteria)
+            <input type="number" name="kriteria_value[{{$kriteria->id}}]" placeholder="{{$kriteria->nama}}" class="p-2 border rounded" required>
+
+               @endforeach 
+
             {{-- Dropdown Fields --}}
-            <div class="grid grid-cols-3 gap-2">
-                <select name="simluhtan" class="p-2 border rounded">
-                    <option value="">Simluhtan</option>
-                    <option value="1">1</option>
-                    <option value="5">5</option>
-                </select>
-
-                <select name="terpoligon" class="p-2 border rounded">
-                    <option value="">Terpoligon</option>
-                    <option value="1">1</option>
-                    <option value="5">5</option>
-                </select>
-
-                <select name="bantuan_sebelumnya" class="p-2 border rounded">
-                    <option value="">Bantuan Sebelumnya</option>
-                    <option value="1">1</option>
-                    <option value="5">5</option>
-                </select>
-
-                <input type="number" name="dpi" placeholder="DPI..." class="p-2 border rounded" required>
-                <input type="number" name="provitas" placeholder="Provitas..." class="p-2 border rounded" required>
-
-
-            </div>
+         
 
             <div class="mt-4 flex justify-end gap-2">
                 <button type="button" onclick="closeModal()"
@@ -232,28 +215,14 @@
 
             {{-- Dropdown Fields --}}
             <div class="grid grid-cols-3 gap-2">
-                <select name="simluhtan" id="editSimluhtan" class="p-2 border rounded">
-                    <option value="">Simluhtan</option>
-                    <option value="1">1</option>
-                    <option value="5">5</option>
-                </select>
 
-                <select name="terpoligon" id="editTerpoligon" class="p-2 border rounded">
-                    <option value="">Terpoligon</option>
-                    <option value="1">1</option>
-                    <option value="5">5</option>
-                </select>
+            @foreach ($kriterias as $kriteria)
+            <input type="number" name="kriteria_value_edit[{{$kriteria->id}}]" placeholder="{{$kriteria->nama}}" class="p-2 border rounded" required>
 
-                <select name="bantuan_sebelumnya" id="editBantuanSebelumnya" class="p-2 border rounded">
-                    <option value="">Bantuan Sebelumnya</option>
-                    <option value="1">1</option>
-                    <option value="5">5</option>
-                </select>
+               @endforeach 
 
-                <input type="number" name="dpi" id="editDpi" placeholder="DPI..." class="p-2 border rounded" required>
-                <input type="number" name="provitas" id="editProvitas" placeholder="Provitas..."
-                    class="p-2 border rounded" required>
 
+            
             </div>
 
             <div class="mt-4 flex justify-end gap-2">
@@ -288,6 +257,9 @@ function selectKecamatan(id, name) {
     document.getElementById("currentKecamatanLabel").innerText = "Saat ini: " + name;
     localStorage.setItem("selectedKecamatan", id);
     localStorage.setItem("selectedKecamatanName", name);
+    document.getElementById("selectMulai").value = id;
+
+ 
     document.getElementById("dropdownKecamatanMenu").classList.add("hidden");
     filterTableByKecamatan(id);
 }
@@ -322,7 +294,8 @@ function importExcel(event) {
 
 function editKelompokTani(id) {
     $.get(`/kelompok-tani/${id}/edit`, function(data) {
-        console.log(data); // Debugging data
+        console.log(data); // Debugging data di console
+
         // Isi form edit dengan data yang diambil
         $('#editNama').val(data.kelompokTani.nama);
         $('#editDesa').val(data.kelompokTani.desa);
@@ -330,21 +303,32 @@ function editKelompokTani(id) {
         $('#editSimluhtan').val(data.kelompokTani.simluhtan);
         $('#editTerpoligon').val(data.kelompokTani.terpoligon);
         $('#editBantuanSebelumnya').val(data.kelompokTani.bantuan_sebelumnya);
-
         $('#editDpi').val(data.kelompokTani.dpi);
         $('#editProvitas').val(data.kelompokTani.provitas);
-
         $('#editKecamatanId').val(data.kelompokTani.kecamatan_id);
 
         // Set action form edit
         $('#editForm').attr('action', `/kelompok-tani/${id}`);
 
+        // Isi nilai kriteria
+        console.log(data.kriteriaValues);
+        
+        if (data.kriteriaValues) {
+    data.kriteriaValues.forEach((item) => {
+        $(`input[name='kriteria_value_edit[${item.kriteria_id}]']`).val(item.value ? item.value : "");
+    });
+    
+}
+
+
         // Tampilkan modal edit
         $('#editModal').removeClass('hidden');
+
     }).fail(function() {
         alert('Gagal mengambil data!');
     });
 }
+
 
 
 function closeEditModal() {

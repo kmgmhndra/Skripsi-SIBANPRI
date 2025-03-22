@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\KelompokTani;
 use App\Models\Kriteria;
 use App\Models\Kecamatan;
+use App\Models\Seleksi;
 
 class HasilSeleksiController extends Controller
 {
@@ -18,33 +19,10 @@ class HasilSeleksiController extends Controller
         $kecamatan = Kecamatan::all();
 
         // Ambil data kelompok tani berdasarkan kecamatan
-        $kelompokTani = KelompokTani::where('kecamatan_id', $kecamatanId)->get();
-
-        // Ambil bobot kriteria dari tabel kriteria (hasil ROC)
-        // NOTE: Pastikan urutan (kunci) cocok dengan field yang diakses di perhitungan
-        $bobotKriteria = Kriteria::pluck('bobot', 'urutan')->toArray();
-
-        // Lakukan perhitungan WPM untuk setiap kelompok tani
-        $hasilSeleksi = $kelompokTani->map(function ($tani) use ($bobotKriteria) {
-            // Pastikan kunci seperti 'simluhtan', 'terpoligon', dsb. memang sesuai dengan 'urutan' di DB
-            // Jika di DB hanya ada urutan numeric, sebaiknya gunakan 'nama' kriteria sebagai kunci
-            $nilaiWPM = pow($tani->simluhtan, $bobotKriteria['simluhtan'] ?? 1)
-                      * pow($tani->terpoligon, $bobotKriteria['terpoligon'] ?? 1)
-                      * pow($tani->bantuan_sebelumnya, $bobotKriteria['bantuan_sebelumnya'] ?? 1)
-                      * pow($tani->dpi, $bobotKriteria['dpi'] ?? 1)
-                      * pow($tani->provitas, $bobotKriteria['provitas'] ?? 1);
-
-            return [
-                'id'         => $tani->id,
-                'nama'       => $tani->nama,
-                'ketua' => $tani->ketua,
-                'desa'       => $tani->desa,
-                'nilai'      => $nilaiWPM,
-            ];
-        });
+        $seleksis = Seleksi::where('kecamatan_id', $kecamatanId)->get();
 
         // Urutkan berdasarkan nilai WPM (dari terbesar ke terkecil)
-        $hasilSeleksi = $hasilSeleksi->sortByDesc('nilai')->values()->toArray();
+        $hasilSeleksi = $seleksis->sortByDesc('nilai_wpm')->values()->toArray();
 
         // Pastikan nama view sesuai dengan file Blade Anda:
         // Misalnya: resources/views/hasil-seleksi/index.blade.php
