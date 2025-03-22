@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\KelompokTaniController;
+use App\Http\Controllers\HasilSeleksiController;
 use App\Http\Controllers\SeleksiController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\ProfileController;
@@ -27,9 +28,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Route untuk Kriteria
-    Route::resource('kriteria', KriteriaController::class)->except(['show']); // Menghindari duplikasi
-    Route::post('/kriteria/update-urutan', [KriteriaController::class, 'updateUrutan'])->name('kriteria.updateUrutan');
-    
+    Route::resource('kriteria', KriteriaController::class)->except(['show']);
+    Route::patch('/kriteria/update-urutan', [KriteriaController::class, 'updateUrutan'])->name('kriteria.updateUrutan');
+    Route::put('/kriteria/{id}', [KriteriaController::class, 'update'])->name('kriteria.update');
+
     // Route untuk Kelompok Tani
     Route::get('/kelompok-tani', [KelompokTaniController::class, 'index'])
         ->name('kelompok-tani.index');
@@ -41,12 +43,17 @@ Route::middleware('auth')->group(function () {
     // Resource route kecuali index
     Route::resource('kelompok-tani', KelompokTaniController::class)->except(['index']);
 
-    // Route untuk Hasil Seleksi & Laporan
-    Route::get('/hasil-seleksi', [SeleksiController::class, 'index'])->name('hasil-seleksi.index');
-    Route::post('/seleksi/proses', [SeleksiController::class, 'prosesSeleksi'])->name('seleksi.proses');
+    // Route untuk Hasil Seleksi & Laporan  
+    Route::post('/seleksi-proses', [SeleksiController::class, 'proses'])->name('seleksi.proses');
+
+    
+    Route::get('/hasil-seleksi', [HasilSeleksiController::class, 'index'])->name('hasil-seleksi.index');
+    Route::post('/hasil-seleksi/simpan', [HasilSeleksiController::class, 'simpan'])->name('hasil-seleksi.simpan');
+
 
     
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('/laporan/{id}/download', [LaporanController::class, 'download'])->name('laporan.download');
 
 });
 

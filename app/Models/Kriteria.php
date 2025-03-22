@@ -10,7 +10,7 @@ class Kriteria extends Model
     use HasFactory;
 
     protected $table = 'kriteria';
-    protected $fillable = ['nama', 'urutan', 'bobot'];
+    protected $fillable = ['nama', 'urutan', 'bobot', 'jenis']; // Tambahkan 'jenis'
 
     public static function hitungBobotROC()
     {

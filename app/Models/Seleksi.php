@@ -9,22 +9,17 @@ class Seleksi extends Model
 {
     use HasFactory;
 
-    // Tentukan kolom yang dapat diisi
+    protected $table = 'seleksi';
+
     protected $fillable = [
-        'kelompok_tani',
         'kecamatan_id',
-        'nilai',
+        'nama_kelompok_tani',
+        'ketua',
+        'desa',
+        'nilai_wpm',
+        'peringkat',
+        'terpilih',
     ];
 
-    // Relasi ke model KelompokTani
-    public function kelompokTani()
-    {
-        return $this->belongsTo(KelompokTani::class);
-    }
-
-    // Relasi ke model Kecamatan
-    public function kecamatan()
-    {
-        return $this->belongsTo(Kecamatan::class);
-    }
+    public $timestamps = true;
 }

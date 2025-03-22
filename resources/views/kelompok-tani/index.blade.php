@@ -118,8 +118,8 @@
         </div>
     </div>
 
-    {{-- Modal Konfirmasi Mulai Seleksi --}}
-    <div id="modalKonfirmasi" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50  ">
+    <!-- Modal Konfirmasi Mulai Seleksi -->
+    <div id="modalKonfirmasi" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
         <div class="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 class="text-lg font-semibold mb-4">Konfirmasi Mulai Seleksi</h2>
             <p class="text-gray-600 mb-4">Apakah Anda yakin ingin memulai proses seleksi?</p>
@@ -128,6 +128,8 @@
                     class="bg-gray-300 px-4 py-2 rounded-lg hover:bg-gray-400">Batal</button>
                 <form id="seleksiForm" action="{{ route('seleksi.proses') }}" method="POST">
                     @csrf
+                    <!-- Input hidden untuk mengirim kecamatan_id -->
+                    <input type="hidden" name="kecamatan_id" id="seleksiKecamatanId" value="">
                     <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
                         Mulai
                     </button>
@@ -135,6 +137,7 @@
             </div>
         </div>
     </div>
+
 
     <script>
     function showModalKonfirmasi() {
@@ -192,7 +195,6 @@
                 <input type="number" name="dpi" placeholder="DPI..." class="p-2 border rounded" required>
                 <input type="number" name="provitas" placeholder="Provitas..." class="p-2 border rounded" required>
 
-                <input type="hidden" name="kecamatan_id" id="selectedKecamatanInput">
 
             </div>
 
@@ -359,7 +361,7 @@ $('#editForm').submit(function(e) {
 
     $.ajax({
         url: actionUrl,
-        type: 'POST', // Laravel tidak menerima PUT langsung, gunakan _method
+        type: 'POST', 
         data: formData + "&_method=PUT",
         success: function(response) {
             $('#editModal').addClass('hidden');

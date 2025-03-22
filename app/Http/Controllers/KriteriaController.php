@@ -16,84 +16,118 @@ class KriteriaController extends Controller
 
     public function store(Request $request)
     {
-        try {
-            $request->validate([
-                'nama' => 'required|unique:kriteria,nama',
-                'urutan' => 'required|integer|min:1'
-            ]);
+        $request->validate([
+            'nama' => 'required|string',
+            'urutan' => 'required|integer|min:1',
+            'jenis' => 'required|in:benefit,cost'
+        ]);
 
-            $urutanBaru = $request->urutan;
-            $jumlahKriteria = Kriteria::count();
+        DB::transaction(function () use ($request) {
+            // Geser kriteria ke bawah, mulai dari yang terbesar dulu
+            DB::table('kriteria')
+                ->where('urutan', '>=', $request->urutan)
+                ->orderBy('urutan', 'desc')
+                ->update(['urutan' => DB::raw('urutan + 1')]);
 
-            // Jika urutan lebih dari jumlah kriteria, tambahkan di akhir
-            if ($urutanBaru > $jumlahKriteria + 1) {
-                $urutanBaru = $jumlahKriteria + 1;
-            }
-
-            // **1. Geser urutan dari belakang untuk mencegah duplikasi**
-            Kriteria::where('urutan', '>=', $urutanBaru)
-                ->orderBy('urutan', 'desc') // Geser dari urutan terbesar
-                ->update(['urutan' => \DB::raw('urutan + 1')]);
-
-            // **2. Tambahkan kriteria baru dengan urutan yang sudah disiapkan**
-            $kriteria = Kriteria::create([
+            // Tambahkan kriteria baru
+            Kriteria::create([
                 'nama' => $request->nama,
-                'urutan' => $urutanBaru,
-                'bobot' => 0
+                'urutan' => $request->urutan,
+                'jenis' => $request->jenis
             ]);
 
-            // **3. Hitung ulang bobot ROC**
-            Kriteria::hitungBobotROC();
+            // Hitung ulang bobot ROC
+            $this->hitungUlangBobotROC();
+        });
 
-            return response()->json(['success' => true, 'message' => 'Kriteria berhasil ditambahkan!']);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-        }
+        return response()->json(['success' => true, 'message' => 'Kriteria berhasil ditambahkan']);
     }
-
 
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama' => 'required|string|max:255|unique:kriteria,nama,' . $id,
+            'nama' => 'required|string',
+            'urutan' => 'required|integer|min:1',
+            'jenis' => 'required|in:benefit,cost'
         ]);
 
-        $kriteria = Kriteria::findOrFail($id);
-        $kriteria->nama = $request->nama;
-        $kriteria->save();
+        DB::transaction(function () use ($request, $id) {
+            $kriteria = Kriteria::findOrFail($id);
+            $urutanLama = $kriteria->urutan;
+            $urutanBaru = $request->urutan;
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Kriteria berhasil diperbarui!',
-            'data' => $kriteria
-        ]);
+            if ($urutanLama != $urutanBaru) {
+                if ($urutanLama < $urutanBaru) {
+                    DB::table('kriteria')
+                        ->whereBetween('urutan', [$urutanLama + 1, $urutanBaru])
+                        ->orderBy('urutan', 'asc')
+                        ->update(['urutan' => DB::raw('urutan - 1')]);
+                } else {
+                    DB::table('kriteria')
+                        ->whereBetween('urutan', [$urutanBaru, $urutanLama - 1])
+                        ->orderBy('urutan', 'desc')
+                        ->update(['urutan' => DB::raw('urutan + 1')]);
+                }
+            }
+
+            // Update kriteria
+            $kriteria->update([
+                'nama' => $request->nama,
+                'urutan' => $urutanBaru,
+                'jenis' => $request->jenis
+            ]);
+
+            // Hitung ulang bobot ROC
+            $this->hitungUlangBobotROC();
+        });
+
+        return response()->json(['success' => true, 'message' => 'Kriteria berhasil diperbarui']);
     }
+
 
     public function destroy($id)
     {
-        try {
-            DB::beginTransaction();
-
+        DB::transaction(function () use ($id) {
             $kriteria = Kriteria::findOrFail($id);
-            $urutanDihapus = $kriteria->urutan;
+            $urutanLama = $kriteria->urutan;
+
+            // Hapus kriteria
             $kriteria->delete();
 
-            Kriteria::where('urutan', '>', $urutanDihapus)->decrement('urutan');
-            Kriteria::hitungBobotROC();
+            // Perbaiki urutan setelah penghapusan
+            DB::table('kriteria')
+                ->where('urutan', '>', $urutanLama)
+                ->decrement('urutan');
 
-            DB::commit();
+            // Hitung ulang bobot ROC
+            $this->hitungUlangBobotROC();
+        });
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Kriteria berhasil dihapus!'
-            ]);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan saat menghapus kriteria: ' . $e->getMessage()
-            ], 500);
+        return response()->json(['success' => true, 'message' => 'Kriteria berhasil dihapus']);
+    }
+
+    private function hitungUlangBobotROC()
+    {
+        $kriteria = Kriteria::orderBy('urutan', 'asc')->get();
+        $jumlahKriteria = $kriteria->count();
+
+        if ($jumlahKriteria == 0) {
+            return;
+        }
+
+        foreach ($kriteria as $index => $item) {
+            $rank = $index + 1;
+            $bobot = 0;
+
+            for ($j = $rank; $j <= $jumlahKriteria; $j++) {
+                $bobot += 1 / $j;
+            }
+
+            $bobotROC = $bobot / $jumlahKriteria;
+
+            // Update bobot di database
+            $item->update(['bobot' => $bobotROC]);
         }
     }
 }

@@ -22,7 +22,8 @@
 <body class="bg-blue-50 flex">
     <!-- Sidebar -->
     <aside class="w-64 min-h-screen bg-white shadow-lg p-6 fixed left-0 top-0 bottom-0">
-        <h1 class="text-4xl font-bold text-gray-900 mb-6">BANPRI<span class="text-green-500">.</span></h1>
+        <h1 class="text-4xl font-bold text-gray-900 mb-6 cursor-pointer" onclick="window.location.href='/dashboard'">
+            BANPRI<span class="text-green-500">.</span></h1>
         <p class="text-gray-400 text-sm mb-6">SPK Bantuan Benih Tanaman Pangan</p>
         <nav class="space-y-2">
             <a href="{{ route('dashboard') }}"
@@ -64,10 +65,18 @@
         <header class="bg-blue-50 p-4 flex items-center justify-between shadow-sm fixed top-0 left-64 right-0 z-50">
             <!-- Search Bar -->
             <div class="relative flex-1 max-w-xl">
+                <!-- Ikon Search -->
+                <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z" />
+                </svg>
+
+                <!-- Input Search -->
                 <input type="text" placeholder="Search here" class="w-full p-3 pl-12 bg-white border border-gray-300 rounded-full shadow-sm 
-           focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none">
-                <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+               focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none">
             </div>
+
 
             <!-- Right Side Icons -->
             <div class="flex items-center space-x-6 relative">
@@ -127,20 +136,13 @@
         </main>
 
         <!-- Footer -->
-        <footer class="bg-blue-500 text-white text-center py-6 shadow-inner">
-            <div class="container mx-auto">
-                <p class="text-sm">&copy; 2025 <strong>BANPRI</strong> - Sistem Pendukung Keputusan Bantuan Benih
-                    Tanaman Pangan.</p>
-                <p class="text-xs mt-1">Dinas Pertanian Kabupaten Buleleng</p>
-                <div class="mt-2 flex justify-center space-x-4">
-                    <a href="#" class="text-white hover:text-gray-700 transition duration-300">Tentang</a>
-                    <span>|</span>
-                    <a href="#" class="text-white hover:text-gray-700 transition duration-300">Kebijakan Privasi</a>
-                    <span>|</span>
-                    <a href="#" class="text-white hover:text-gray-700 transition duration-300">Kontak</a>
-                </div>
+        <footer class="bg-blue-500 text-white text-center py-4 shadow-inner">
+            <div class="container mx-auto text-sm">
+                <p>&copy; 2025 <strong>BANPRI</strong> - SPK Bantuan Benih Tanaman Pangan</p>
+                <p class="text-xs">Dinas Pertanian Kabupaten Buleleng</p>
             </div>
         </footer>
+
 
     </div>
     @stack('scripts')
