@@ -15,7 +15,7 @@
             class="flex flex-col items-start bg-white p-4 rounded-lg shadow-md border border-gray-300 w-64">
             <div class="flex items-center">
                 <img src="{{ asset('images/periode.png') }}" alt="Calendar" class="w-6 h-6 mr-2">
-                <span class="text-gray-700 font-semibold" id="selectedPeriod">Pilih Periode</span>
+                <span class="text-gray-700 font-semibold" id="selectedPeriod">Pilih Jenis Seleksi</span>
                 <svg class="w-4 h-4 ml-auto text-gray-600 transition-transform duration-300" id="arrowIcon"
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd"
@@ -28,9 +28,9 @@
 
         <!-- Dropdown Menu -->
         <div id="dropdownMenu" class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg hidden">
-            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-100" onclick="selectPeriod('Tahap 1')">Tahap 1</a>
-            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-100" onclick="selectPeriod('Tahap 2')">Tahap 2</a>
-            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-100" onclick="selectPeriod('Tahap 3')">Tahap 3</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-100" onclick="selectPeriod('Padi')">Padi</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-100" onclick="selectPeriod('Palawija')">Palawija</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-100" onclick="selectPeriod('Pupuk')">Pupuk</a>
         </div>
     </div>
 </div>

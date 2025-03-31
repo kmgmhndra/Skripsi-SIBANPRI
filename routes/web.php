@@ -7,6 +7,7 @@ use App\Http\Controllers\HasilSeleksiController;
 use App\Http\Controllers\SeleksiController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DetailController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -49,11 +50,12 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/hasil-seleksi', [HasilSeleksiController::class, 'index'])->name('hasil-seleksi.index');
     Route::post('/hasil-seleksi/simpan', [HasilSeleksiController::class, 'simpan'])->name('hasil-seleksi.simpan');
-
-
+   
     
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/laporan/{id}/download', [LaporanController::class, 'download'])->name('laporan.download');
+    Route::get('/detail/{id}', [DetailController::class, 'show'])->name('detail');
+
 
 });
 

@@ -28,7 +28,7 @@
                 </a>
 
                 <!-- Tombol Detail -->
-                <a href="#" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
+                <a href="{{ route('detail', $item) }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
                     Detail
                 </a>
 
