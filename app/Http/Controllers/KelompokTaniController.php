@@ -7,86 +7,97 @@ use App\Models\KelompokTani;
 use App\Models\Kecamatan;
 use App\Models\Kriteria;
 use App\Models\KriteriaValue;
+use Illuminate\Support\Facades\Session;
+use App\Imports\KelompokTaniImport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class KelompokTaniController extends Controller
 {
     public function index(Request $request)
     {
-        // Ambil semua kecamatan
+        // Get all kecamatan
         $kecamatan = Kecamatan::all();
+        $jenisTani = Session::get('jenis_tani');
 
-        // Jika ada kecamatan yang dipilih, filter data kelompok tani berdasarkan kecamatan
-        $selectedKecamatan = $request->input('kecamatan_id');
-        $kelompokTani = KelompokTani::when($selectedKecamatan, function ($query) use ($selectedKecamatan) {
-            return $query->where('kecamatan_id', $selectedKecamatan);
-        })->with('kecamatan')->get();
+
+        $kelompokTani = KelompokTani::where('jenis_tani', $jenisTani)->get();
+
+        $kecamatanId = $kelompokTani->isNotEmpty() ? $kelompokTani->first()->kecamatan_id : null;
 
         $kriterias = Kriteria::all();
- // Ambil nilai kriteria untuk kelompok tani yang ada
- $kelompokTaniIds = $kelompokTani->pluck('id');
- $kriteriaValues = KriteriaValue::whereIn('kelompok_tani_id', $kelompokTaniIds)->get();
 
- // Bentuk array asosiatif: ['kelompok_tani_id' => ['kriteria_id' => nilai]]
- $kriteriaValuesArray = [];
- foreach ($kriteriaValues as $value) {
-     $kriteriaValuesArray[$value->kelompok_tani_id][$value->kriteria_id] = $value->value;
- }
+        $kelompokTaniIds = $kelompokTani->pluck('id');
+        $kriteriaValues = KriteriaValue::whereIn('kelompok_tani_id', $kelompokTaniIds)->get();
 
-        return view('kelompok-tani.index', compact('kecamatan', 'kelompokTani', 'selectedKecamatan', 'kriterias', 'kriteriaValuesArray'));
+        $kriteriaValuesArray = [];
+        foreach ($kriteriaValues as $value) {
+            $kriteriaValuesArray[$value->kelompok_tani_id][$value->kriteria_id] = $value->value;
+        }
+
+        return view('kelompok-tani.index', compact(
+            'kecamatan',
+            'kelompokTani',
+            'kecamatanId',
+            'kriterias',
+            'kriteriaValuesArray',
+            'jenisTani'
+        ));
     }
-
     public function store(Request $request)
     {
         // Validasi input
-        $request->validate([
+        $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'desa' => 'required|string|max:255',
             'ketua' => 'required|string|max:255',
             'kecamatan_id' => 'required|exists:kecamatan,id',
-            // 'simluhtan' => 'required|in:1,5',
-            // 'terpoligon' => 'required|in:1,5',
-            // 'bantuan_sebelumnya' => 'required|in:1,5', // Ganti dari riwayat
-            // 'dpi' => 'required|numeric|min:0',
-            // 'provitas' => 'required|numeric|min:0',
             'status' => 'nullable|in:aktif,nonaktif',
         ]);
 
-        // Set default status menjadi 'tidak_terpilih'
-        $request->merge(['status' => 'tidak_terpilih']);
+
+        $jenisTani = Session::get('jenis_tani');
+
+        // Gabungkan data yang divalidasi dengan data tambahan
+        $data = array_merge($validated, [
+            'jenis_tani' => $jenisTani,
+            'status' => 'tidak_terpilih' // Set default status
+        ]);
 
         // Simpan data kelompok tani
-        $kelompok_tani = KelompokTani::create($request->all());
+        $kelompok_tani = KelompokTani::create($data);
 
-        //
-        $data = $request->input('kriteria_value'); // Mengambil semua input dari form
-        // $kelompokTaniId = $request->input('kelompok_tani_id'); // Ambil ID kelompok tani dari form
-    
-        foreach ($data as $kriteriaId => $nilai) {
-            KriteriaValue::updateOrCreate(
-                [
-                    'kriteria_id' => $kriteriaId,
-                    'kelompok_tani_id' => $kelompok_tani->id
-                ],
-                ['value' => $nilai]
-            );
+        // Simpan kriteria nilai
+        if ($request->has('kriteria_value')) {
+            foreach ($request->input('kriteria_value') as $kriteriaId => $nilai) {
+                KriteriaValue::updateOrCreate(
+                    [
+                        'kriteria_id' => $kriteriaId,
+                        'kelompok_tani_id' => $kelompok_tani->id
+                    ],
+                    ['value' => $nilai]
+                );
+            }
         }
-        return redirect()->route('kelompok-tani.index')->with('success', 'Kelompok Tani berhasil ditambahkan!');
+
+        return redirect()->route('kelompok-tani.index')
+            ->with('success', 'Kelompok Tani berhasil ditambahkan!');
     }
     public function edit($id)
     {
         $kelompokTani = KelompokTani::findOrFail($id);
         $kecamatan = Kecamatan::all();
-        
+
         // Ambil nilai kriteria untuk kelompok tani ini
         $kriteriaValues = KriteriaValue::where('kelompok_tani_id', $id)
             ->select('kriteria_id', 'value', 'kelompok_tani_id')
             ->get();
 
-            // dd($kriteriaValues);
-    
+        // dd($kriteriaValues);
+
         return response()->json(compact('kelompokTani', 'kecamatan', 'kriteriaValues'));
     }
-    
+
 
 
     public function update(Request $request, $id)
@@ -98,13 +109,13 @@ class KelompokTaniController extends Controller
             'ketua' => 'required|string|max:255',
             'kecamatan_id' => 'required|exists:kecamatan,id',
             'status' => 'nullable|in:aktif,nonaktif',
-            'kriteria_value_edit' => 'nullable|array', // Pastikan ini berupa array
-            'kriteria_value_edit.*' => 'nullable|numeric', // Pastikan isinya angka
+            'kriteria_value_edit' => 'nullable|array',
+            'kriteria_value_edit.*' => 'nullable|numeric',
         ]);
-    
+
         // Jika status kosong, set default ke 'tidak_terpilih'
         $status = $request->status ?: 'tidak_terpilih';
-    
+
         // Cari data kelompok tani dan update
         $kelompokTani = KelompokTani::findOrFail($id);
         $kelompokTani->update([
@@ -114,7 +125,7 @@ class KelompokTaniController extends Controller
             'kecamatan_id' => $request->kecamatan_id,
             'status' => $status,
         ]);
-    
+
         // Update atau Insert kriteria_value
         if ($request->has('kriteria_value_edit')) {
             foreach ($request->kriteria_value_edit as $kriteria_id => $value) {
@@ -127,10 +138,10 @@ class KelompokTaniController extends Controller
                 );
             }
         }
-    
+
         return redirect()->route('kelompok-tani.index')->with('success', 'Kelompok Tani dan Kriteria Value berhasil diperbarui!');
     }
-    
+
 
     public function destroy($id)
     {
@@ -144,11 +155,16 @@ class KelompokTaniController extends Controller
     public function import(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv'
+            'file' => 'required|mimes:xlsx,xls'
         ]);
+        $kecamatan_id = $request->kecamatan_id;
+        $jenis_tani = Session::get('jenis_tani');
 
-        Excel::import(new KelompokTaniImport, $request->file('file'));
-
-        return redirect()->route('kelompok-tani.index')->with('success', 'Data Kelompok Tani berhasil diimpor!');
+        try {
+            Excel::import(new KelompokTaniImport($kecamatan_id, $jenis_tani), $request->file('file'));
+            return back()->with('success', 'Data berhasil diimport');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error: ' . $e->getMessage());
+        }
     }
 }

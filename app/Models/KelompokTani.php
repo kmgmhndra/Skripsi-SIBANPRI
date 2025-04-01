@@ -22,12 +22,15 @@ class KelompokTani extends Model
         'dpi',
         'provitas',
         'status',
+        'jenis_tani'
     ];
-        
+
 
     // Relasi ke tabel Kecamatan
     public function kecamatan()
     {
         return $this->belongsTo(Kecamatan::class, 'kecamatan_id', 'id');
     }
+
+
 }

@@ -23,6 +23,9 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 // Kelompok route yang memerlukan autentikasi
 Route::middleware('auth')->group(function () {
+
+    Route::get('/setSessionJenisTani/{jenis}', [DashboardController::class, 'setSessionJenisTani'])->name('jenis.tani');
+
     // Route untuk profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -47,14 +50,16 @@ Route::middleware('auth')->group(function () {
     // Route untuk Hasil Seleksi & Laporan  
     Route::post('/seleksi-proses', [SeleksiController::class, 'proses'])->name('seleksi.proses');
 
-    
+
     Route::get('/hasil-seleksi', [HasilSeleksiController::class, 'index'])->name('hasil-seleksi.index');
     Route::post('/hasil-seleksi/simpan', [HasilSeleksiController::class, 'simpan'])->name('hasil-seleksi.simpan');
-   
-    
+
+
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
-    Route::get('/laporan/{id}/download', [LaporanController::class, 'download'])->name('laporan.download');
-    Route::get('/detail/{id}', [DetailController::class, 'show'])->name('detail');
+    Route::get('/laporan/{id}/download', [LaporanController::class, 'cetakPdf'])->name('laporan.download');
+    Route::get('/detail/{id}', [LaporanController::class, 'show'])->name('detail');
+    Route::delete('/laporan-delete/{id}', [LaporanController::class, 'destroy'])
+        ->name('laporan.destroy');
 
 
 });

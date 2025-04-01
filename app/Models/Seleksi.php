@@ -19,6 +19,7 @@ class Seleksi extends Model
         'nilai_wpm',
         'peringkat',
         'terpilih',
+        'jenis_tani'
     ];
 
     public $timestamps = true;

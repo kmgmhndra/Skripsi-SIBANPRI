@@ -44,9 +44,10 @@
                 <i class="fas fa-users"></i>
                 <span>Data Kelompok Tani</span>
             </a>
-            <a href="{{ route('hasil-seleksi.index') }}"
+            <a id="selectedKecamatanRequest"
+                href="{{ route('hasil-seleksi.index', ['kecamatan_id' => $kecamatanId ?? 1]) }}"
                 class="flex items-center space-x-3 px-4 py-3 rounded-lg 
-                   {{ request()->is('hasil-seleksi*') ? 'bg-green-100 text-green-600 font-semibold' : 'text-gray-700 hover:bg-gray-100 hover:text-green-600' }}">
+           {{ request()->is('hasil-seleksi*') ? 'bg-green-100 text-green-600 font-semibold' : 'text-gray-700 hover:bg-gray-100 hover:text-green-600' }}">
                 <i class="fas fa-chart-bar"></i>
                 <span>Hasil Seleksi</span>
             </a>
@@ -109,25 +110,29 @@
                     </div>
                 </div>
             </div>
+
         </header>
 
         <script>
-        // Dropdown toggle functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const dropdownToggle = document.getElementById('profile-dropdown-toggle');
-            const dropdownMenu = document.getElementById('profile-dropdown');
 
-            dropdownToggle.addEventListener('click', (event) => {
-                event.stopPropagation();
-                dropdownMenu.classList.toggle('hidden');
-            });
 
-            document.addEventListener('click', (event) => {
-                if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                    dropdownMenu.classList.add('hidden');
-                }
+
+            // Dropdown toggle functionality
+            document.addEventListener('DOMContentLoaded', function () {
+                const dropdownToggle = document.getElementById('profile-dropdown-toggle');
+                const dropdownMenu = document.getElementById('profile-dropdown');
+
+                dropdownToggle.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    dropdownMenu.classList.toggle('hidden');
+                });
+
+                document.addEventListener('click', (event) => {
+                    if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                        dropdownMenu.classList.add('hidden');
+                    }
+                });
             });
-        });
         </script>
 
         <!-- Konten yang Bisa di-Scroll -->

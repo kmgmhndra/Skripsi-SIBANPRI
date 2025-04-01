@@ -19,6 +19,8 @@ return new class extends Migration {
             $table->decimal('nilai_wpm', 8, 4); // Menyimpan nilai hasil seleksi
             $table->integer('peringkat'); // Peringkat hasil seleksi
             $table->boolean('terpilih')->default(false); // Checkbox untuk status terpilih
+            $table->enum('jenis_tani', ['Padi', 'Palawija', 'Pupuk']); // Jenis Tani
+
         });
     }
 

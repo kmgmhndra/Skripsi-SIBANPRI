@@ -10,19 +10,24 @@ use Illuminate\Support\Facades\DB;
 
 class SeleksiController extends Controller
 {
+
+
     public function proses(Request $request)
     {
         // Validasi input kecamatan_id
         $request->validate([
             'kecamatan_id' => 'required|exists:kecamatan,id',
+            'jenis_tani' => 'required',
+
         ]);
         $kecamatanId = $request->input('kecamatan_id');
+        $jenisTani = $request->input('jenis_tani');
 
         // Ambil seluruh data kriteria (dengan bobot, nama, dan jenis: cost/benefit)
         $kriteria = Kriteria::all();
 
         // Ambil data kelompok tani sesuai kecamatan
-        $kelompokTani = KelompokTani::where('kecamatan_id', $kecamatanId)->get();
+        $kelompokTani = KelompokTani::where('kecamatan_id', $kecamatanId)->where('jenis_tani', $jenisTani)->get();
         if ($kelompokTani->isEmpty()) {
             return redirect()->back()->with('error', 'Tidak ada kelompok tani di kecamatan ini.');
         }
@@ -52,10 +57,10 @@ class SeleksiController extends Controller
             // Simpan hasil sementara
             $results[] = [
                 'kelompok_tani_id' => $kt->id,
-                'nama'             => $kt->nama,
-                'ketua'            => $kt->ketua,
-                'desa'             => $kt->desa,
-                'score'            => $score, // Nilai S_i
+                'nama' => $kt->nama,
+                'ketua' => $kt->ketua,
+                'desa' => $kt->desa,
+                'score' => $score, // Nilai S_i
             ];
 
             $totalScore += $score;
@@ -76,7 +81,6 @@ class SeleksiController extends Controller
         foreach ($results as $index => $result) {
             $peringkat = $index + 1;
 
-            // Ambil data sebelumnya untuk mempertahankan status `terpilih`
             $existing = DB::table('seleksi')
                 ->where('kelompok_tani_id', $result['kelompok_tani_id'])
                 ->first();
@@ -87,19 +91,20 @@ class SeleksiController extends Controller
             DB::table('seleksi')->updateOrInsert(
                 ['kelompok_tani_id' => $result['kelompok_tani_id']],
                 [
-                    'kecamatan_id'         => $kecamatanId,
-                    'nama_kelompok_tani'   => $result['nama'],
-                    'ketua'                => $result['ketua'],
-                    'desa'                 => $result['desa'],
-                    'nilai_wpm'            => $result['V'], // Simpan nilai V, bukan S_i
-                    'peringkat'            => $peringkat,
-                    'terpilih'             => $terpilih, // Pertahankan nilai sebelumnya
-                    'updated_at'           => now(),
-                    'created_at'           => now(),
+                    'jenis_tani' => $jenisTani,
+                    'kecamatan_id' => $kecamatanId,
+                    'nama_kelompok_tani' => $result['nama'],
+                    'ketua' => $result['ketua'],
+                    'desa' => $result['desa'],
+                    'nilai_wpm' => $result['V'], // Simpan nilai V, bukan S_i
+                    'peringkat' => $peringkat,
+                    'terpilih' => $terpilih, // Pertahankan nilai sebelumnya
+                    'updated_at' => now(),
+                    'created_at' => now(),
                 ]
             );
         }
 
-        return redirect('/hasil-seleksi')->with('success', 'Proses seleksi berhasil dilakukan!');
+        return redirect('/hasil-seleksi?kecamatan_id=' . $kecamatanId)->with('success', 'Proses seleksi berhasil dilakukan!');
     }
 }

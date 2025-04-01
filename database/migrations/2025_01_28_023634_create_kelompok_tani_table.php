@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Jalankan migration.
      */
@@ -13,11 +12,14 @@ return new class extends Migration
     {
         Schema::create('kelompok_tani', function (Blueprint $table) {
             $table->id();
+
             $table->string('nama'); // Nama kelompok tani
             $table->string('desa'); // Nama desa
             $table->string('ketua'); // Nama ketua kelompok tani
             $table->foreignId('kecamatan_id')->constrained('kecamatan')->onDelete('cascade'); // Relasi ke tabel kecamatan
             $table->enum('status', ['terpilih', 'tidak_terpilih'])->default('tidak_terpilih'); // Tambah status
+            $table->enum('jenis_tani', ['Padi', 'Palawija', 'Pupuk']); // Jenis Tani
+
             $table->timestamps();
         });
     }
