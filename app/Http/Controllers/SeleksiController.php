@@ -10,16 +10,14 @@ use Illuminate\Support\Facades\DB;
 
 class SeleksiController extends Controller
 {
-
-
     public function proses(Request $request)
     {
         // Validasi input kecamatan_id
         $request->validate([
             'kecamatan_id' => 'required|exists:kecamatan,id',
             'jenis_tani' => 'required',
-
         ]);
+
         $kecamatanId = $request->input('kecamatan_id');
         $jenisTani = $request->input('jenis_tani');
 
@@ -44,17 +42,21 @@ class SeleksiController extends Controller
                     ->where('kriteria_id', $kr->id)
                     ->first();
 
-                $value = $kv ? $kv->value : 0;
+                // Pastikan nilai tidak 0 atau null, gunakan 0.0001 sebagai nilai minimal
+                $value = $kv ? max($kv->value, 0.0001) : 0.0001;
 
                 if ($kr->jenis === 'cost') {
-                    $value = ($value == 0) ? 0.0001 : $value;
                     $score *= pow((1 / $value), $kr->bobot);
                 } else { // benefit
                     $score *= pow($value, $kr->bobot);
                 }
+
+                // dump("Kelompok: {$kt->nama}, Kriteria: {$kr->nama}, Nilai: {$value}, Bobot: {$kr->bobot}, Score sementara: {$score}");
             }
 
-            // Simpan hasil sementara
+            // Cek setiap hasil per kelompok
+            // dump("Kelompok: {$kt->nama}, Total S_i: {$score}");
+
             $results[] = [
                 'kelompok_tani_id' => $kt->id,
                 'nama' => $kt->nama,
@@ -65,6 +67,9 @@ class SeleksiController extends Controller
 
             $totalScore += $score;
         }
+
+        // Cek total S_i keseluruhan sebelum normalisasi
+        // dump("Total S_i Keseluruhan: {$totalScore}");
 
         // === Tahap Normalisasi WP (Menghitung V_i) ===
         foreach ($results as &$result) {
@@ -100,7 +105,7 @@ class SeleksiController extends Controller
                     'peringkat' => $peringkat,
                     'terpilih' => $terpilih, // Pertahankan nilai sebelumnya
                     'updated_at' => now(),
-                    'created_at' => now(),
+                    'created_at' => $createdAt,
                 ]
             );
         }

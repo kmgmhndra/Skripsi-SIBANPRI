@@ -20,7 +20,7 @@ class DashboardController extends Controller
         $jumlahKelompokTaniTerpilih = $kelompokTanis->where('status', 'terpilih')->count();
         $jumlahKelompokTaniTidakTerpilih = $kelompokTanis->where('status', 'tidak_terpilih')->count();
 
-        $laporan = Laporan::latest()->first();
+        $laporan = Laporan::where('jenis_tani', session('jenis_tani'))->latest()->first();
         $subLaporans = collect();
 
         if ($laporan) {

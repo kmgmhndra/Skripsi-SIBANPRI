@@ -1,4 +1,3 @@
-<!-- resources/views/laporan/cetak.blade.php -->
 <!DOCTYPE html>
 <html>
 
@@ -6,51 +5,91 @@
     <meta charset="utf-8">
     <title>Laporan Seleksi - {{ $laporan->kecamatan }}</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
+    body {
+        font-family: Arial, sans-serif;
+    }
 
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    .header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
 
-        .title {
-            font-size: 18px;
-            font-weight: bold;
-        }
+    .logo {
+        width: 80px;
+        height: auto;
+        position: absolute;
+        top: 10px;
+        left: 20px;
+    }
 
-        .subtitle {
-            font-size: 14px;
-            margin-top: 5px;
-        }
+    .kop-surat {
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
+    .line {
+        border-bottom: 3px solid black;
+        margin-bottom: 20px;
+    }
 
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
 
-        th {
-            background-color: #f2f2f2;
-        }
+    th,
+    td {
+        border: 1px solid #000;
+        padding: 8px;
+        text-align: left;
+    }
 
-        .footer {
-            margin-top: 30px;
-            text-align: right;
-            font-size: 12px;
-        }
+    th {
+        background-color: #f2f2f2;
+        text-align: center;
+    }
+
+    .footer {
+        margin-top: 30px;
+        text-align: right;
+        font-size: 12px;
+    }
     </style>
 </head>
 
 <body>
+    <!-- <img src="{{ public_path('images/logo1.png') }}" class="logo" alt="Logo"
+        style="margin-top: -20px; margin-left: -10px;">
+    <div class="kop-surat">
+        <div style="font-size: 16px; font-weight: bold;">PEMERINTAH KABUPATEN BULELENG</div>
+            <div style="font-size: 18px; font-weight: bold;">DINAS PERTANIAN KABUPATEN BULELENG</div>
+            <div style="font-size: 14px;">Jl. A. Yani No.99, Kaliuntu, Kec. Buleleng, Kabupaten Buleleng, Bali 81116
+            </div>
+            <div style="font-size: 14px;">Email: distan@bulelengkab.go.id | Telp: (0362) 25090</div>
+    </div> -->
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+        <!-- Logo Kiri -->
+        <img src="{{ public_path('images/logo1.png') }}" class="logo" alt="Logo"
+            style="height: 80px; margin-top: -10px; margin-left: -10px;">
+
+        <!-- Kop Surat (Tengah) -->
+        <div style="text-align: center; flex-grow: 1;">
+            <div style="font-size: 16px; font-weight: bold;">PEMERINTAH KABUPATEN BULELENG</div>
+            <div style="font-size: 18px; font-weight: bold;">DINAS PERTANIAN KABUPATEN BULELENG</div>
+            <div style="font-size: 14px;">Jl. A. Yani No.99, Kaliuntu, Kec. Buleleng, Kabupaten Buleleng, Bali 81116
+            </div>
+            <div style="font-size: 14px;">Email: distan@bulelengkab.go.id | Telp: (0362) 25090</div>
+        </div>
+
+    </div>
+
+    <!-- Garis Bawah -->
+    <div style="border-bottom: 2px solid black; margin-top: 5px; margin-bottom: 10px;"></div>
+
+
     <div class="header">
         <div class="title">LAPORAN HASIL SELEKSI KELOMPOK TANI</div>
         <div class="subtitle">Kecamatan {{ $laporan->kecamatan }}</div>
@@ -59,7 +98,7 @@
     <table>
         <tr>
             <td width="30%">Tanggal Seleksi</td>
-            <td>{{ \Carbon\Carbon::parse($laporan->tanggal_seleksi)->format('d F Y') }}</td>
+            <td> {{ \Carbon\Carbon::parse($subLaporans->first()->laporan->tanggal_seleksi)->format('d M Y') }}</td>
         </tr>
         <tr>
             <td>Jumlah Kelompok Tani</td>
@@ -85,14 +124,14 @@
         </thead>
         <tbody>
             @foreach($subLaporans as $index => $item)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $item->nama_kelompok_tani }}</td>
-                    <td>{{ $item->nama_ketua }}</td>
-                    <td>{{ $item->nama_desa }}</td>
-                    <td>{{ $item->nilai_wpm }}</td>
-                    <td>{{ $item->peringkat }}</td>
-                </tr>
+            <tr>
+                <td style="text-align: center;">{{ $index + 1 }}</td>
+                <td>{{ $item->nama_kelompok_tani }}</td>
+                <td>{{ $item->nama_ketua }}</td>
+                <td>{{ $item->nama_desa }}</td>
+                <td style="text-align: center;">{{ $item->nilai_wpm }}</td>
+                <td style="text-align: center;">{{ $item->peringkat }}</td>
+            </tr>
             @endforeach
         </tbody>
     </table>

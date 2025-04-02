@@ -18,7 +18,7 @@ class LaporanController extends Controller
     }
     public function show($id)
     {
-        $subLaporans = SubLaporan::where('laporan_id', $id)->get();
+        $subLaporans = SubLaporan::where('laporan_id', $id)->orderBy('peringkat')->get();
 
         return view('laporan.detail', compact('id', 'subLaporans')); // Kirim ID ke tampilan (opsional)
     }
@@ -26,7 +26,7 @@ class LaporanController extends Controller
     public function cetakPdf($id)
     {
         $laporan = Laporan::findOrFail($id);
-        $subLaporans = SubLaporan::where('laporan_id', $id)->get();
+        $subLaporans = SubLaporan::where('laporan_id', $id)->orderBy('peringkat')->get();
 
         $pdf = Pdf::loadView('laporan.cetak-pdf', [
             'laporan' => $laporan,

@@ -6,7 +6,7 @@
         <!-- Kiri: Judul & Deskripsi -->
         <div>
             <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
-            <p class="text-gray-600 mt-1">Hi, Mahendra. Welcome back to BANPRI!</p>
+            <p class="text-gray-600 mt-1">Hi, <strong>{{ Auth::user()->name }}</strong> Welcome back to BANPRI!</p>
         </div>
 
         <!-- Kanan: Dropdown Jenis Tani -->
@@ -82,9 +82,9 @@
                 <tr class="bg-gray-100">
                     <th class="p-3 text-left">Nama Kelompok</th>
                     <th class="p-3 text-left">Kecamatan</th>
-                    <th class="p-3 text-left">Skor WPM</th>
-                    <th class="p-3 text-left">Ranking</th>
-                    <th class="p-3 text-left">Aksi</th>
+                    <th class="p-3 text-center">Skor WPM</th>
+                    <th class="p-3 text-center">Ranking</th>
+                    <th class="p-3 text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -92,11 +92,11 @@
                     <tr class="border-t">
                         <td class="p-3">{{ $item->nama_kelompok_tani }}</td>
                         <td class="p-3">{{ $item->nama_desa }}</td>
-                        <td class="p-3">{{ $item->nilai_wpm }}</td>
-                        <td class="p-3">{{ $item->peringkat }}</td>
-                        <td class="p-3">
+                        <td class="p-3 text-center">{{ $item->nilai_wpm }}</td>
+                        <td class="p-3 text-center">{{ $item->peringkat }}</td>
+                        <td class="p-3 text-center">
                             <a href="/detail/{{ $item->laporan_id }}">
-                                <button class="bg-purple-600 text-white px-3 py-1 rounded-md">Detail</button>
+                                <button class="bg-blue-500 text-white px-3 py-1 rounded-md">Detail</button>
                             </a>
                         </td>
                     </tr>

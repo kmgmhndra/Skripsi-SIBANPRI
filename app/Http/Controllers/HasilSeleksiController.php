@@ -52,7 +52,7 @@ class HasilSeleksiController extends Controller
         $laporan = Laporan::create([
             'nama_laporan' => 'Laporan ' . $kecamatan->nama, // Fixed string concatenation (using . instead of +)
             'kecamatan' => $kecamatan->nama,
-            'tanggal_seleksi' => $seleksi_data->first()->created_at, // Get created_at from first item
+            'tanggal_seleksi' => $seleksi_data->first()->updated_at, 
             'jumlah_kelompok_tani' => $seleksi_data->count(),
             'jenis_tani' => $seleksi_data->first()->jenis_tani,
         ]);
