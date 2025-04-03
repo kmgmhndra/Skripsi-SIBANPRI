@@ -4,6 +4,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Register - BANPRI</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <link rel="icon" type="image/png" href="{{ asset('images/favicon.ico') }}">
     </head>
 
     <body class="bg-blue-50 flex items-center justify-center min-h-screen relative">

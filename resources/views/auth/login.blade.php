@@ -5,6 +5,7 @@
         <title>Welcome to BANPRI</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="icon" type="image/png" href="{{ asset('images/favicon.ico') }}">
     </head>
 
     <body class="bg-gradient-to-r from-blue-50 to-blue-100 flex items-center justify-center min-h-screen relative">
