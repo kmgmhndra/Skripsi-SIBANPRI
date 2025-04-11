@@ -26,7 +26,7 @@
     <!-- Sidebar -->
     <aside class="hidden md:flex flex-col w-64 min-h-screen bg-white shadow-lg p-6 fixed left-0 top-0 bottom-0">
         <h1 class="text-4xl font-bold text-gray-900 mb-6 cursor-pointer" onclick="window.location.href='/dashboard'">
-            BANPRI<span class="text-green-500">.</span></h1>
+            SIBANPRI<span class="text-green-500">.</span></h1>
         <p class="text-gray-400 text-sm mb-6">SPK Bantuan Benih Tanaman Pangan</p>
         <nav class="space-y-2">
             <a href="{{ route('dashboard') }}"
@@ -97,13 +97,39 @@
 
             <!-- Right Side Icons -->
             <div class="hidden md:flex items-center space-x-6 relative">
+
+                <!-- Logo 1 -->
                 <img src="{{ asset('images/logo1.png') }}" alt="Logo 1" class="h-10">
+
+                <!-- Logo 2 -->
                 <img src="{{ asset('images/logo2.png') }}" alt="Logo 2" class="h-10">
 
-                <!-- User Info with Dropdown -->
+                <!-- Dropdown Tahun -->
+                <div class="relative w-20 group">
+                    <select
+                        class="block appearance-none bg-white border border-gray-300 text-gray-700 py-2 pl-2 pr-6 text-center rounded-2xl shadow-sm focus:outline-none focus:border-blue-500 w-full cursor-pointer"
+                        name="tahun" id="tahun-dropdown" onchange="location = this.value;" title="Pilih Tahun">
+
+                        @for ($tahun = 2024; $tahun <= date('Y'); $tahun++) <option class="mr-4"
+                            value="{{ url()->current() }}?tahun={{ $tahun }}"
+                            {{ request('tahun', date('Y')) == $tahun ? 'selected' : '' }}>
+                            {{ $tahun }}
+                            </option>
+                            @endfor
+                    </select>
+
+                    <!-- Icon Dropdown -->
+                    <div class="pointer-events-none absolute inset-y-0 right-2 flex items-center">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- User Icon with Dropdown -->
                 <div class="relative">
-                    <div class="flex items-center space-x-3 cursor-pointer" id="profile-dropdown-toggle">
-                        <span class="text-gray-700">Hello, <strong>{{ Auth::user()->name }}</strong></span>
+                    <div class="cursor-pointer" id="profile-dropdown-toggle">
                         <div
                             class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 font-semibold">
                             {{ substr(Auth::user()->name, 0, 1) }}
@@ -112,11 +138,10 @@
 
                     <!-- Dropdown Menu -->
                     <div id="profile-dropdown"
-                        class="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg hidden z-50">
+                        class="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-300 rounded-xl shadow-lg hidden z-50">
                         <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-100">
                             Profile
                         </a>
-                        <!-- Logout Form -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-100">
@@ -127,13 +152,14 @@
                 </div>
             </div>
 
+
         </header>
 
         <!-- Header Mobile -->
         <header
             class="md:hidden bg-blue-50 p-4 shadow-sm fixed top-0 left-0 right-0 z-50 flex items-center justify-between">
 
-            <!-- Hamburger Button untuk Mobile -->
+            <!-- Hamburger Button -->
             <div class="flex items-center">
                 <button id="menu-btn" class="text-gray-700 z-50">
                     <!-- Hamburger Icon -->
@@ -142,7 +168,6 @@
                         <path fill-rule="evenodd"
                             d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
                     </svg>
-                    <!-- Close Icon -->
                     <svg id="close-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                         class="bi bi-x-lg hidden" viewBox="0 0 16 16">
                         <path
@@ -151,13 +176,36 @@
                 </button>
             </div>
 
-            <!-- Logos on the right side -->
-            <div class="flex space-x-4 items-center">
-                <img src="{{ asset('images/logo1.png') }}" alt="Logo 1" class="w-10 h-10"> <!-- Logo 1 -->
-                <img src="{{ asset('images/logo2.png') }}" alt="Logo 2" class="w-10 h-10"> <!-- Logo 2 -->
+            <!-- Logo di Tengah -->
+            <div class="flex items-center space-x-2 pl-8">
+                <img src="{{ asset('images/logo1.png') }}" alt="Logo 1" class="w-10 h-10">
+                <img src="{{ asset('images/logo2.png') }}" alt="Logo 2" class="w-10 h-10">
+            </div>
+
+            <!-- Dropdown Tahun di Kanan -->
+            <div class="relative w-20">
+                <select
+                    class="block appearance-none bg-white border border-gray-300 text-gray-700 py-2 pl-2 pr-6 text-center rounded-2xl shadow-sm focus:outline-none focus:border-blue-500 w-full cursor-pointer"
+                    name="tahun" id="tahun-dropdown" onchange="location = this.value;" title="Pilih Tahun">
+
+                    @for ($tahun = 2024; $tahun <= date('Y'); $tahun++) <option
+                        value="{{ url()->current() }}?tahun={{ $tahun }}"
+                        {{ request('tahun', date('Y')) == $tahun ? 'selected' : '' }}>
+                        {{ $tahun }}
+                        </option>
+                        @endfor
+                </select>
+
+                <div class="pointer-events-none absolute inset-y-0 right-2 flex items-center">
+                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
             </div>
 
         </header>
+
 
         <!-- Mobile Menu -->
         <div id="mobile-menu"
@@ -175,7 +223,12 @@
                     class="block py-2 text-gray-800 hover:text-green-500 pr-8">Laporan</a>
                 <a href="{{ route('profile.edit') }}"
                     class="block py-2 text-gray-800 hover:text-green-500 pr-8">Profile</a>
-                <a href="{{ route('logout') }}" class="block py-2 text-gray-800 hover:text-green-500 pr-8">Logout</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="w-full text-left py-2 text-gray-800 hover:text-green-500 pr-8">
+                        Logout
+                    </button>
+                </form>
             </div>
         </div>
 

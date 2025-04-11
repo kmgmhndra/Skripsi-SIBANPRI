@@ -149,8 +149,11 @@ class KelompokTaniController extends Controller
 
         KriteriaValue::where('kelompok_tani_id', $id)->delete();
 
+        // HasilSeleksi::where('kelompok_tani_id', $id)->delete();
+
         return redirect()->route('kelompok-tani.index')->with('success', 'Kelompok Tani berhasil dihapus!');
     }
+    
 
     public function import(Request $request)
     {

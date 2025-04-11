@@ -13,8 +13,13 @@
             <button id="dropdownKecamatanButton"
                 class="flex flex-col items-start bg-white p-4 rounded-lg shadow-md border border-gray-300 w-64">
                 <div class="flex items-center">
-                    <img src="{{ asset('images/periode.png') }}" alt="Kecamatan" class="w-6 h-6 mr-2">
-                    <span class="text-gray-700 font-semibold" id="selectedKecamatan">Memuat...</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-geo-alt" viewBox="0 0 16 16">
+                        <path
+                            d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
+                        <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                    </svg>
+                    <span class="text-gray-700 font-semibold ml-2" id="selectedKecamatan">Memuat...</span>
                     <svg class="w-4 h-4 ml-auto text-gray-600 transition-transform duration-300" id="arrowKecamatanIcon"
                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd"
@@ -182,15 +187,13 @@
 
 
 </div>
-
 {{-- Modal Tambah Data --}}
-<div id="modal-tambah" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
-        <h2 class="text-xl font-bold mb-4">Input Data Kelompok Tani</h2>
+<div id="modal-tambah" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50 p-4">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg md:w-1/3">
+        <h2 class="text-xl font-bold mb-4 text-center md:text-left">Input Data Kelompok Tani</h2>
         <form action="{{ route('kelompok-tani.store') }}" method="POST">
             @csrf
             <input type="hidden" name="kecamatan_id" id="selectedKecamatanInput" class="hidden">
-
 
             <div class="mb-3">
                 <input type="text" name="nama" placeholder="Nama Kelompok Tani..." class="w-full p-2 border rounded"
@@ -203,7 +206,6 @@
                 <input type="text" name="ketua" placeholder="Nama Ketua..." class="w-full p-2 border rounded" required>
             </div>
 
-
             @foreach ($kriterias as $kriteria)
             <div class="mb-3">
                 <input type="number" name="kriteria_value[{{$kriteria->id}}]" placeholder="{{$kriteria->nama}}"
@@ -211,60 +213,70 @@
             </div>
             @endforeach
 
-            <div class="mt-4 flex justify-end gap-2">
+            <div class="mt-4 flex flex-col md:flex-row justify-end gap-2">
                 <button type="button" onclick="closeModal()"
-                    class="bg-gray-500 text-white px-4 py-2 rounded">Batal</button>
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Tambah</button>
+                    class="bg-gray-500 text-white px-4 py-2 rounded w-full md:w-auto">Batal</button>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded w-full md:w-auto">Tambah</button>
             </div>
         </form>
     </div>
 </div>
+
+{{-- Modal Edit Data --}}
 {{-- Modal Edit Data --}}
 <div id="editModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
-        <h2 class="text-xl font-bold mb-4">Edit Data Kelompok Tani</h2>
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-2xl mx-4">
+        <h2 class="text-xl font-bold mb-4 text-center md:text-left">Edit Data Kelompok Tani</h2>
+
         <form id="editForm" method="POST">
             @csrf
             @method('PUT')
             <input type="hidden" name="kecamatan_id" id="editKecamatanId">
 
-            <div class="mb-3">
-                <label for="editNama" class="block text-sm font-medium text-gray-700">Nama Kelompok Tani</label>
-                <input type="text" name="nama" id="editNama" placeholder="Masukkan nama kelompok tani"
-                    class="w-full p-2 border rounded" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="editDesa" class="block text-sm font-medium text-gray-700">Nama Desa</label>
-                <input type="text" name="desa" id="editDesa" placeholder="Masukkan nama desa"
-                    class="w-full p-2 border rounded" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="editKetua" class="block text-sm font-medium text-gray-700">Nama Ketua</label>
-                <input type="text" name="ketua" id="editKetua" placeholder="Masukkan nama ketua kelompok"
-                    class="w-full p-2 border rounded" required>
-            </div>
-
-            <!-- Dropdown Fields -->
-            <div class="grid grid-cols-3 gap-2">
-                @foreach ($kriterias as $kriteria)
-                <div class="mb-3">
-                    <label class="block text-sm font-medium text-gray-700">{{ $kriteria->nama }}</label>
-                    <input type="number" name="kriteria_value_edit[{{$kriteria->id}}]"
-                        placeholder="Masukkan nilai {{ $kriteria->nama }}" class="p-2 border rounded w-full" required>
+            <div class="space-y-3">
+                <div>
+                    <label for="editNama" class="block text-sm font-medium text-gray-700">Nama Kelompok Tani</label>
+                    <input type="text" name="nama" id="editNama" placeholder="Masukkan nama kelompok tani"
+                        class="w-full p-2 border rounded" required>
                 </div>
-                @endforeach
+
+                <div>
+                    <label for="editDesa" class="block text-sm font-medium text-gray-700">Nama Desa</label>
+                    <input type="text" name="desa" id="editDesa" placeholder="Masukkan nama desa"
+                        class="w-full p-2 border rounded" required>
+                </div>
+
+                <div>
+                    <label for="editKetua" class="block text-sm font-medium text-gray-700">Nama Ketua</label>
+                    <input type="text" name="ketua" id="editKetua" placeholder="Masukkan nama ketua kelompok"
+                        class="w-full p-2 border rounded" required>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    @foreach ($kriterias as $kriteria)
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">{{ $kriteria->nama }}</label>
+                        <input type="number" name="kriteria_value_edit[{{$kriteria->id}}]"
+                            placeholder="Masukkan nilai {{ $kriteria->nama }}" class="w-full p-2 border rounded"
+                            required>
+                    </div>
+                    @endforeach
+                </div>
             </div>
 
-            <div class="mt-4 flex justify-end gap-2">
+            <div class="mt-5 flex flex-col md:flex-row justify-end gap-2">
                 <button type="button" onclick="closeEditModal()"
-                    class="bg-gray-500 text-white px-4 py-2 rounded">Batal</button>
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Simpan</button>
+                    class="bg-gray-500 text-white px-4 py-2 rounded w-full md:w-auto">Batal</button>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded w-full md:w-auto">Simpan</button>
             </div>
         </form>
     </div>
 </div>
+
+
+
+
+
 
 
 

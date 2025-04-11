@@ -14,7 +14,7 @@ class KelompokTaniSeeder extends Seeder
         DB::table('users')->truncate();
         DB::table('users')->insert([
             'name' => 'Admin',
-            'email' => 'admin@admin.com',
+            'email' => 'admin@gmail.com',
             'password' => bcrypt('12345678'),
             'role' => 'admin'
         ]);

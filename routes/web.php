@@ -54,7 +54,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/hasil-seleksi', [HasilSeleksiController::class, 'index'])->name('hasil-seleksi.index');
     Route::post('/hasil-seleksi/simpan', [HasilSeleksiController::class, 'simpan'])->name('hasil-seleksi.simpan');
 
-
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/laporan/{id}/download', [LaporanController::class, 'cetakPdf'])->name('laporan.download');
     Route::get('/detail/{id}', [LaporanController::class, 'show'])->name('detail');

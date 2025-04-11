@@ -61,27 +61,19 @@
 </head>
 
 <body>
-    <!-- <img src="{{ public_path('images/logo1.png') }}" class="logo" alt="Logo"
-        style="margin-top: -20px; margin-left: -10px;">
-    <div class="kop-surat">
-        <div style="font-size: 16px; font-weight: bold;">PEMERINTAH KABUPATEN BULELENG</div>
-            <div style="font-size: 18px; font-weight: bold;">DINAS PERTANIAN KABUPATEN BULELENG</div>
-            <div style="font-size: 14px;">Jl. A. Yani No.99, Kaliuntu, Kec. Buleleng, Kabupaten Buleleng, Bali 81116
-            </div>
-            <div style="font-size: 14px;">Email: distan@bulelengkab.go.id | Telp: (0362) 25090</div>
-    </div> -->
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
         <!-- Logo Kiri -->
-        <img src="{{ public_path('images/logo1.png') }}" class="logo" alt="Logo"
+        <img src="{{ public_path('images/logo2.png') }}" class="logo" alt="Logo"
             style="height: 80px; margin-top: -10px; margin-left: -10px;">
 
         <!-- Kop Surat (Tengah) -->
         <div style="text-align: center; flex-grow: 1;">
             <div style="font-size: 16px; font-weight: bold;">PEMERINTAH KABUPATEN BULELENG</div>
-            <div style="font-size: 18px; font-weight: bold;">DINAS PERTANIAN KABUPATEN BULELENG</div>
-            <div style="font-size: 14px;">Jl. A. Yani No.99, Kaliuntu, Kec. Buleleng, Kabupaten Buleleng, Bali 81116
+            <div style="font-size: 18px; font-weight: bold;">DINAS PERTANIAN</div>
+            <div style="font-size: 14px;">Jl. A. Yani No.99 Singaraja, Buleleng, BALI 81116,
             </div>
-            <div style="font-size: 14px;">Email: distan@bulelengkab.go.id | Telp: (0362) 25090</div>
+            <div style="font-size: 14px;">Telepon: (0362) 25090</div>
+          <div style="font-size: 14px;">Laman distan.bulelengkab.go.id, Pos-el distan@bulelengkab.go.id</div>
         </div>
 
     </div>
@@ -135,10 +127,12 @@
             @endforeach
         </tbody>
     </table>
-
-    <div class="footer">
-        <div>Dicetak pada: {{ now()->format('d F Y H:i') }}</div>
+  
+  <div style="text-align:right;  margin-top: 70px; margin-right: 70px;">
+        <div>Singaraja, {{ now()->format('d F Y') }} </div>
     </div>
+
+    
 </body>
 
 </html>
