@@ -78,6 +78,14 @@ class SeleksiController extends Controller
         });
 
         // === Simpan ke Database ===
+        $kelompokTaniIdsInResults = array_column($results, 'kelompok_tani_id');
+
+        DB::table('seleksi')
+            ->where('jenis_tani', $jenisTani)
+            ->where('kecamatan_id', $kecamatanId)
+            ->whereNotIn('kelompok_tani_id', $kelompokTaniIdsInResults)
+            ->delete();
+
         foreach ($results as $index => $result) {
             $peringkat = $index + 1;
 
@@ -100,7 +108,7 @@ class SeleksiController extends Controller
                     'peringkat' => $peringkat,
                     'terpilih' => $terpilih, // Pertahankan nilai sebelumnya
                     'updated_at' => now(),
-                    'created_at' => now(),
+                    'created_at' => $createdAt, // Gunakan created_at yang sudah ada jika update
                 ]
             );
         }
