@@ -12,7 +12,8 @@ class Laporan extends Model
         'kecamatan',
         'tanggal_seleksi',
         'jumlah_kelompok_tani',
-        'jenis_tani'
+        'jenis_tani',
+        'tahun'
 
 
 

@@ -21,8 +21,10 @@ class HasilSeleksiController extends Controller
         // dd(request('kecamatan_id'));
 
         $kecamatan = Kecamatan::all();
+        $tahun = Session::get('tahun');
 
-        $seleksis = Seleksi::where('kecamatan_id', $kecamatanId)->where('jenis_tani', $jenisTani)->get();
+
+        $seleksis = Seleksi::where('kecamatan_id', $kecamatanId)->where('jenis_tani', $jenisTani)->where('tahun', $tahun)->get();
 
         $hasilSeleksi = $seleksis->sortByDesc('nilai_wpm')->values()->toArray();
 
@@ -39,7 +41,7 @@ class HasilSeleksiController extends Controller
 
 
         $seleksi_data = Seleksi::whereIn('kelompok_tani_id', $request->kelompok_tani_id)->get();
-        // dd($seleksi_data);
+
 
         // Check if any data was found
         if ($seleksi_data->isEmpty()) {
@@ -47,14 +49,16 @@ class HasilSeleksiController extends Controller
         }
 
         $kecamatan = Kecamatan::findOrFail($request->kecamatan_id);
+        $tahun = Session::get('tahun');
 
         // Create the main report
         $laporan = Laporan::create([
             'nama_laporan' => 'Laporan ' . $kecamatan->nama, // Fixed string concatenation (using . instead of +)
             'kecamatan' => $kecamatan->nama,
-            'tanggal_seleksi' => $seleksi_data->first()->created_at, // Get created_at from first item
+            'tanggal_seleksi' => $seleksi_data->first()->updated_at,
             'jumlah_kelompok_tani' => $seleksi_data->count(),
             'jenis_tani' => $seleksi_data->first()->jenis_tani,
+            'tahun' => $tahun,
         ]);
 
         // Create sub-reports

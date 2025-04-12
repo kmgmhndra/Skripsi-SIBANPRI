@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->foreignId('kecamatan_id')->constrained('kecamatan')->onDelete('cascade'); // Relasi ke tabel kecamatan
             $table->enum('status', ['terpilih', 'tidak_terpilih'])->default('tidak_terpilih'); // Tambah status
             $table->enum('jenis_tani', ['Padi', 'Palawija', 'Pupuk']); // Jenis Tani
+            $table->year('tahun');
 
             $table->timestamps();
         });

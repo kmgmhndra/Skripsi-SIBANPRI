@@ -22,7 +22,8 @@ class KelompokTani extends Model
         'dpi',
         'provitas',
         'status',
-        'jenis_tani'
+        'jenis_tani',
+        'tahun'
     ];
 
 

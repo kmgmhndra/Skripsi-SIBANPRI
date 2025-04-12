@@ -19,9 +19,11 @@ class KelompokTaniController extends Controller
         // Get all kecamatan
         $kecamatan = Kecamatan::all();
         $jenisTani = Session::get('jenis_tani');
+        $tahun = Session::get('tahun');
 
 
-        $kelompokTani = KelompokTani::where('jenis_tani', $jenisTani)->get();
+
+        $kelompokTani = KelompokTani::where('jenis_tani', $jenisTani)->where('tahun', $tahun)->get();
 
         $kecamatanId = $kelompokTani->isNotEmpty() ? $kelompokTani->first()->kecamatan_id : null;
 
@@ -57,11 +59,14 @@ class KelompokTaniController extends Controller
 
 
         $jenisTani = Session::get('jenis_tani');
+        $tahun = Session::get('tahun');
+
 
         // Gabungkan data yang divalidasi dengan data tambahan
         $data = array_merge($validated, [
             'jenis_tani' => $jenisTani,
-            'status' => 'tidak_terpilih' // Set default status
+            'status' => 'tidak_terpilih', // Set default status
+            'tahun' => $tahun,
         ]);
 
         // Simpan data kelompok tani
@@ -149,8 +154,11 @@ class KelompokTaniController extends Controller
 
         KriteriaValue::where('kelompok_tani_id', $id)->delete();
 
+        // HasilSeleksi::where('kelompok_tani_id', $id)->delete();
+
         return redirect()->route('kelompok-tani.index')->with('success', 'Kelompok Tani berhasil dihapus!');
     }
+
 
     public function import(Request $request)
     {
@@ -159,9 +167,11 @@ class KelompokTaniController extends Controller
         ]);
         $kecamatan_id = $request->kecamatan_id;
         $jenis_tani = Session::get('jenis_tani');
+        $tahun = Session::get('tahun');
+
 
         try {
-            Excel::import(new KelompokTaniImport($kecamatan_id, $jenis_tani), $request->file('file'));
+            Excel::import(new KelompokTaniImport($kecamatan_id, $jenis_tani, $tahun), $request->file('file'));
             return back()->with('success', 'Data berhasil diimport');
         } catch (\Exception $e) {
             return back()->with('error', 'Error: ' . $e->getMessage());

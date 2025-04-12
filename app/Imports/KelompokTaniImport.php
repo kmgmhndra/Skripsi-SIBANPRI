@@ -14,13 +14,15 @@ class KelompokTaniImport implements ToModel, WithHeadingRow, WithValidation
 {
     private $kriterias;
     private $kecamatanId;
+    private $tahun;
     private $jenisTani;
     private $criteriaColumns = [];
 
-    public function __construct($kecamatanId, $jenisTani)
+    public function __construct($kecamatanId, $jenisTani, $tahun)
     {
         $this->kecamatanId = $kecamatanId;
         $this->jenisTani = $jenisTani;
+        $this->tahun = $tahun;
 
         // Load all criteria from database and create search variations
         $this->kriterias = Kriteria::all()->mapWithKeys(function ($item) {
@@ -52,6 +54,7 @@ class KelompokTaniImport implements ToModel, WithHeadingRow, WithValidation
             'nama' => $this->getValue($row, 'nama'),
             'desa' => $this->getValue($row, 'desa'),
             'jenis_tani' => $this->jenisTani,
+            'tahun' => $this->tahun,
             'status' => $this->getValue($row, 'status') ?? 'tidak_terpilih',
             'kecamatan_id' => $this->kecamatanId,
             'ketua' => $this->getValue($row, 'ketua'),

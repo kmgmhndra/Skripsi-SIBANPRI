@@ -8,24 +8,32 @@ use App\Models\Laporan;
 use App\Models\SubLaporan;
 use App\Models\KelompokTani;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Session;
+
 
 class LaporanController extends Controller
 {
     public function index()
     {
-        $laporans = Laporan::orderBy('created_at', 'desc')->get();
+        $tahun = Session::get('tahun');
+        $jenis_tani = Session::get('jenis_tani');
+
+        $laporans = Laporan::orderBy('created_at', 'desc')->where('tahun', $tahun)->where('jenis_tani', $jenis_tani)->get();
         return view('laporan.index', compact('laporans'));
     }
     public function show($id)
     {
-        $subLaporans = SubLaporan::where('laporan_id', $id)->orderBy('peringkat')->get();
+
+        $subLaporans = SubLaporan::where('laporan_id', $id)->get();
+
         return view('laporan.detail', compact('id', 'subLaporans')); // Kirim ID ke tampilan (opsional)
     }
 
     public function cetakPdf($id)
     {
         $laporan = Laporan::findOrFail($id);
-        $subLaporans = SubLaporan::where('laporan_id', $id)->orderBy('peringkat')->get();
+        $subLaporans = SubLaporan::where('laporan_id', $id)->get();
+
         $pdf = Pdf::loadView('laporan.cetak-pdf', [
             'laporan' => $laporan,
             'subLaporans' => $subLaporans

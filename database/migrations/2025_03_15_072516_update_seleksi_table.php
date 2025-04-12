@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->foreignId('kelompok_tani_id');
             $table->string('ketua');
             $table->string('desa');
+            $table->year('tahun');
             $table->decimal('nilai_wpm', 8, 4); // Menyimpan nilai hasil seleksi
             $table->integer('peringkat'); // Peringkat hasil seleksi
             $table->boolean('terpilih')->default(false); // Checkbox untuk status terpilih

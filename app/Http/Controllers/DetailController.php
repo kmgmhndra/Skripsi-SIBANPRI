@@ -12,6 +12,6 @@ class DetailController extends Controller
     {
         $subLaporans = SubLaporan::where('laporan_id', $id)->get();
 
-        return view('laporan.detail', compact('id', 'subLaporans')); // Kirim ID ke tampilan (opsional)
+        return view('laporan.detail', compact('id', 'subLaporans')); // Kirim ID ke tampilan
     }
 }

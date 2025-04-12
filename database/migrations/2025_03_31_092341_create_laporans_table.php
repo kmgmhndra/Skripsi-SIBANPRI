@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('jenis_tani');
             $table->date('tanggal_seleksi');
             $table->integer('jumlah_kelompok_tani');
+            $table->year('tahun');
 
 
         });
