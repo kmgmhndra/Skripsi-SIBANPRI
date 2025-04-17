@@ -85,14 +85,14 @@
             </div>
 
             <script>
-                document.getElementById('searchInput').addEventListener('keypress', function (event) {
-                    if (event.key === 'Enter') { // Jalankan pencarian saat tekan Enter
-                        let text = this.value;
-                        if (text) {
-                            window.find(text);
-                        }
+            document.getElementById('searchInput').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') { // Jalankan pencarian saat tekan Enter
+                    let text = this.value;
+                    if (text) {
+                        window.find(text);
                     }
-                });
+                }
+            });
             </script>
 
             <!-- Right Side Icons -->
@@ -111,16 +111,16 @@
                         name="tahun" id="tahun-dropdown" onchange="location = this.value;" title="Pilih Tahun">
 
                         @php
-                            $tahunSekarang = date('Y');
-                            $tahunSession = session('tahun', $tahunSekarang);
+                        $tahunSekarang = date('Y');
+                        $tahunSession = session('tahun', $tahunSekarang);
                         @endphp
 
-                        @for ($tahun = $tahunSekarang - 4; $tahun <= $tahunSekarang; $tahun++)
-                            <option class="mr-4"  value="{{ route('setTahun', ['tahun' => $tahun]) }}"
+                        @for ($tahun = $tahunSekarang - 4; $tahun <= $tahunSekarang; $tahun++) <option class="mr-4"
+                            value="{{ route('setTahun', ['tahun' => $tahun]) }}"
                             {{ $tahunSession == $tahun ? 'selected' : '' }}>
-                                {{ $tahun }}
+                            {{ $tahun }}
                             </option>
-                        @endfor
+                            @endfor
 
                     </select>
 
@@ -189,18 +189,27 @@
             </div>
 
             <!-- Dropdown Tahun di Kanan -->
-            <div class="relative w-20">
+            
+            <div class="relative w-20 group">
                 <select
                     class="block appearance-none bg-white border border-gray-300 text-gray-700 py-2 pl-2 pr-6 text-center rounded-2xl shadow-sm focus:outline-none focus:border-blue-500 w-full cursor-pointer"
                     name="tahun" id="tahun-dropdown" onchange="location = this.value;" title="Pilih Tahun">
 
-                    @for ($tahun = 2024; $tahun <= date('Y'); $tahun++)
-                        <option value="{{ url()->current() }}?tahun={{ $tahun }}" {{ request('tahun', date('Y')) == $tahun ? 'selected' : '' }}>
-                            {{ $tahun }}
+                    @php
+                    $tahunSekarang = date('Y');
+                    $tahunSession = session('tahun', $tahunSekarang);
+                    @endphp
+
+                    @for ($tahun = $tahunSekarang - 4; $tahun <= $tahunSekarang; $tahun++) <option class="mr-4"
+                        value="{{ route('setTahun', ['tahun' => $tahun]) }}"
+                        {{ $tahunSession == $tahun ? 'selected' : '' }}>
+                        {{ $tahun }}
                         </option>
-                    @endfor
+                        @endfor
+
                 </select>
 
+                <!-- Icon Dropdown -->
                 <div class="pointer-events-none absolute inset-y-0 right-2 flex items-center">
                     <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2"
                         viewBox="0 0 24 24">
@@ -238,54 +247,54 @@
         </div>
 
         <script>
-            const menuBtn = document.getElementById("menu-btn");
-            const mobileMenu = document.getElementById("mobile-menu");
-            const hamburgerIcon = document.getElementById("hamburger-icon");
-            const closeIcon = document.getElementById("close-icon");
+        const menuBtn = document.getElementById("menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+        const hamburgerIcon = document.getElementById("hamburger-icon");
+        const closeIcon = document.getElementById("close-icon");
 
-            // Toggle menu visibility and icon change
-            menuBtn.addEventListener("click", () => {
-                if (mobileMenu.classList.contains("-translate-y-full")) {
-                    mobileMenu.classList.remove("-translate-y-full"); // Show menu
-                    hamburgerIcon.classList.add("hidden"); // Hide hamburger icon
-                    closeIcon.classList.remove("hidden"); // Show close (X) icon
-                } else {
-                    mobileMenu.classList.add("-translate-y-full"); // Hide menu
-                    hamburgerIcon.classList.remove("hidden"); // Show hamburger icon
-                    closeIcon.classList.add("hidden"); // Hide close (X) icon
-                }
-            });
+        // Toggle menu visibility and icon change
+        menuBtn.addEventListener("click", () => {
+            if (mobileMenu.classList.contains("-translate-y-full")) {
+                mobileMenu.classList.remove("-translate-y-full"); // Show menu
+                hamburgerIcon.classList.add("hidden"); // Hide hamburger icon
+                closeIcon.classList.remove("hidden"); // Show close (X) icon
+            } else {
+                mobileMenu.classList.add("-translate-y-full"); // Hide menu
+                hamburgerIcon.classList.remove("hidden"); // Show hamburger icon
+                closeIcon.classList.add("hidden"); // Hide close (X) icon
+            }
+        });
 
-            // Close the menu if clicked outside the menu or button
-            window.addEventListener("click", (e) => {
-                if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
-                    mobileMenu.classList.add("-translate-y-full");
-                    hamburgerIcon.classList.remove("hidden");
-                    closeIcon.classList.add("hidden");
-                }
-            });
+        // Close the menu if clicked outside the menu or button
+        window.addEventListener("click", (e) => {
+            if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.classList.add("-translate-y-full");
+                hamburgerIcon.classList.remove("hidden");
+                closeIcon.classList.add("hidden");
+            }
+        });
         </script>
 
 
         </header>
 
         <script>
-            // Dropdown toggle functionality
-            document.addEventListener('DOMContentLoaded', function () {
-                const dropdownToggle = document.getElementById('profile-dropdown-toggle');
-                const dropdownMenu = document.getElementById('profile-dropdown');
+        // Dropdown toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownToggle = document.getElementById('profile-dropdown-toggle');
+            const dropdownMenu = document.getElementById('profile-dropdown');
 
-                dropdownToggle.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    dropdownMenu.classList.toggle('hidden');
-                });
-
-                document.addEventListener('click', (event) => {
-                    if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                        dropdownMenu.classList.add('hidden');
-                    }
-                });
+            dropdownToggle.addEventListener('click', (event) => {
+                event.stopPropagation();
+                dropdownMenu.classList.toggle('hidden');
             });
+
+            document.addEventListener('click', (event) => {
+                if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.classList.add('hidden');
+                }
+            });
+        });
         </script>
 
 

@@ -25,7 +25,7 @@
 
     <!-- Tabel Kriteria -->
     <div class="overflow-x-auto">
-        <table class="w-full border-collapse border border-gray-300">
+        <table class="w-full border-collapse border border-gray-300 text-center"> {{-- Tambah text-center di table --}}
             <thead class="bg-gray-100">
                 <tr>
                     <th class="border p-2">Urutan</th>
@@ -48,12 +48,14 @@
                     <td class="border p-2">{{ $k->jenis }}</td>
                     @auth
                     @if(auth()->user()->role === 'admin')
-                    <td class="border p-2 flex flex-col gap-2 md:flex-row">
-                        <button
-                            onclick="editKriteria({{ $k->id }}, '{{ $k->nama }}', '{{ $k->jenis }}', {{ $k->urutan }})"
-                            class="bg-yellow-500 text-white px-3 py-1 rounded w-full md:w-auto">Edit</button>
-                        <button onclick="hapusKriteria({{ $k->id }}, '{{ $k->nama }}')"
-                            class="bg-red-500 text-white px-3 py-1 rounded w-full md:w-auto">Hapus</button>
+                    <td class="border p-2">
+                        <div class="flex flex-col gap-2 md:flex-row justify-center">
+                            <button
+                                onclick="editKriteria({{ $k->id }}, '{{ $k->nama }}', '{{ $k->jenis }}', {{ $k->urutan }})"
+                                class="bg-yellow-500 text-white px-3 py-1 rounded w-full md:w-auto">Edit</button>
+                            <button onclick="hapusKriteria({{ $k->id }}, '{{ $k->nama }}')"
+                                class="bg-red-500 text-white px-3 py-1 rounded w-full md:w-auto">Hapus</button>
+                        </div>
                     </td>
                     @endif
                     @endauth
@@ -62,6 +64,7 @@
             </tbody>
         </table>
     </div>
+
 </div>
 
 

@@ -18,7 +18,7 @@
             <!-- Left Section (Illustrations and Text) -->
             <div class="w-full md:w-3/5 px-6 md:px-12 py-8 flex flex-col justify-center items-start text-center md:text-left">
                 <h1 class="text-5xl md:text-6xl font-bold text-gray-800 leading-tight">Join</h1>
-                <h1 class="text-6xl md:text-7xl font-bold text-black">BANPRI<span class="text-green-600">.</span></h1>
+                <h1 class="text-6xl md:text-7xl font-bold text-black">SIBANPRI<span class="text-green-600">.</span></h1>
                 <p class="text-gray-600 mt-4 text-lg md:text-xl">
                     Sistem Pendukung Keputusan Pemilihan Prioritas Penerima Bantuan Benih Tanaman Pangan<br>
                     <strong>(Dinas Kabupaten Buleleng)</strong>

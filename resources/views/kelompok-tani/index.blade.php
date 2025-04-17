@@ -184,9 +184,8 @@
     }
     </script>
 
-
-
 </div>
+
 {{-- Modal Tambah Data --}}
 <div id="modal-tambah" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50 p-4">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg md:w-1/3">
@@ -459,6 +458,15 @@ document.getElementById('file-import').addEventListener('change', function() {
     }
 });
 </script>
+
+<script>
+    document.querySelectorAll('input[name="nama"], input[name="desa"], input[name="ketua"]').forEach(input => {
+        input.addEventListener('input', () => {
+            input.value = input.value.replace(/[^A-Za-z\s]/g, '');
+        });
+    });
+</script>
+
 
 
 

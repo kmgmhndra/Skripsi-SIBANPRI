@@ -89,12 +89,13 @@
 
     <!-- Tabel Data -->
     <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">Data Terbaru Hasil Seleksi</h2>
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Data Terbaru Hasil Seleksi Kecamatan - {{ $subLaporans->first()->laporan->kecamatan ?? 'Kecamatan' }}</h2>
+        
         <table class="w-full border-collapse">
             <thead>
                 <tr class="bg-gray-100">
                     <th class="p-3 text-left">Nama Kelompok</th>
-                    <th class="p-3 text-left">Kecamatan</th>
+                    <th class="p-3 text-left">Desa</th>
                     <th class="p-3 text-center">Skor WPM</th>
                     <th class="p-3 text-center">Ranking</th>
                     <th class="p-3 text-center">Aksi</th>

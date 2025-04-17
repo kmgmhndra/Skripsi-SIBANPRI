@@ -57,124 +57,151 @@
     </div>
 </div>
 
+@auth
+@if(auth()->user()->role === 'admin')
+<div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-4">
+    <label for="rangeInput" class="text-gray-700 font-medium">Checklist otomatis (misal: 1-10):</label>
+
+    <div class="flex items-center gap-2">
+        <input type="text" id="rangeInput"
+            class="border border-gray-300 rounded-lg p-2 w-36 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder="Contoh: 1-10" oninput="toggleButton()">
+
+        <button type="button" id="selectButton" onclick="checkRange()"
+            class="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+            disabled>
+            Pilih
+        </button>
+    </div>
+</div>
+
+<script>
+function toggleButton() {
+    const input = document.getElementById('rangeInput');
+    const button = document.getElementById('selectButton');
+    button.disabled = input.value.trim() === '';
+}
+</script>
+@endif
+@endauth
+
+
+
+
 <!-- Tabel Hasil Seleksi -->
 <!-- Versi Desktop -->
 <div class="bg-white rounded-lg shadow-md p-4 hidden md:block">
     @if (!empty($hasilSeleksi) && count($hasilSeleksi) > 0)
-        <form method="POST" action="{{ route('hasil-seleksi.simpan') }}">
-            @csrf
-            <input type="hidden" name="kecamatan_id" value="{{ $kecamatanId }}">
+    <form method="POST" action="{{ route('hasil-seleksi.simpan') }}">
+        @csrf
+        <input type="hidden" name="kecamatan_id" value="{{ $kecamatanId }}">
 
-            <table class="w-full border-collapse border">
-                <thead class="bg-gray-200 text-gray-700 font-bold uppercase text-sm">
-                    <tr>
-                        <th class="border px-4 py-2 text-left">No</th>
-                        <th class="border px-4 py-2 text-left">Nama Kelompok</th>
-                        <th class="border px-4 py-2 text-left">Nama Ketua</th>
-                        <th class="border px-4 py-2 text-left">Desa</th>
-                        <th class="border px-4 py-2 text-center">Nilai WPM</th>
-                        <th class="border px-4 py-2 text-center">Ranking</th>
-                        @auth
-                        @if(auth()->user()->role === 'admin')
-                        <th class="border px-4 py-2 text-center">Pilih</th>
-                        @endif
-                        @endauth
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($hasilSeleksi as $index => $tani)
-                        <tr class="hover:bg-gray-100">
-                            <td class="border px-4 py-2">{{ $index + 1 }}</td>
-                            <td class="border px-4 py-2">{{ $tani['nama_kelompok_tani'] }}</td>
-                            <td class="border px-4 py-2">{{ $tani['ketua'] }}</td>
-                            <td class="border px-4 py-2">{{ $tani['desa'] }}</td>
-                            <td class="border px-4 py-2 text-center">{{ number_format($tani['nilai_wpm'], 4) }}</td>
-                            <td class="border px-4 py-2 text-center">{{ $index + 1 }}</td>
-                            @auth
-                            @if(auth()->user()->role === 'admin')
-                            <td class="border px-4 py-2 text-center">
-                                <input type="checkbox" name="kelompok_tani_id[]" value="{{ $tani['kelompok_tani_id'] }}">
-                            </td>
-                            @endif
-                            @endauth
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <table class="w-full border-collapse border">
+            <thead class="bg-gray-200 text-gray-700 font-bold uppercase text-sm">
+                <tr>
+                    <th class="border px-4 py-2 text-left">No</th>
+                    <th class="border px-4 py-2 text-left">Nama Kelompok</th>
+                    <th class="border px-4 py-2 text-left">Nama Ketua</th>
+                    <th class="border px-4 py-2 text-left">Desa</th>
+                    <th class="border px-4 py-2 text-center">Nilai WPM</th>
+                    <th class="border px-4 py-2 text-center">Ranking</th>
+                    @auth
+                    @if(auth()->user()->role === 'admin')
+                    <th class="border px-4 py-2 text-center">Pilih</th>
+                    @endif
+                    @endauth
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($hasilSeleksi as $index => $tani)
+                <tr class="hover:bg-gray-100">
+                    <td class="border px-4 py-2">{{ $index + 1 }}</td>
+                    <td class="border px-4 py-2">{{ $tani['nama_kelompok_tani'] }}</td>
+                    <td class="border px-4 py-2">{{ $tani['ketua'] }}</td>
+                    <td class="border px-4 py-2">{{ $tani['desa'] }}</td>
+                    <td class="border px-4 py-2 text-center">{{ number_format($tani['nilai_wpm'], 4) }}</td>
+                    <td class="border px-4 py-2 text-center">{{ $index + 1 }}</td>
+                    @auth
+                    @if(auth()->user()->role === 'admin')
+                    <td class="border px-4 py-2 text-center">
+                        <input type="checkbox" class="checkbox-kelompok" data-index="{{ $index + 1 }}"
+                            name="kelompok_tani_id[]" value="{{ $tani['kelompok_tani_id'] }}">
+                    </td>
+                    @endif
+                    @endauth
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
 
-            @auth
-            @if(auth()->user()->role === 'admin')
-                <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Simpan Seleksi</button>
-            @endif
-            @endauth
-        </form>
+        @auth
+        @if(auth()->user()->role === 'admin')
+        <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Simpan
+            Seleksi</button>
+        @endif
+        @endauth
+    </form>
     @else
-        <p class="text-gray-600 text-center">Belum ada hasil seleksi untuk kecamatan ini.</p>
+    <p class="text-gray-600 text-center">Belum ada hasil seleksi untuk kecamatan ini.</p>
     @endif
 </div>
 
 <!-- Versi Mobile Tabel -->
 <div class="bg-white rounded-lg shadow-md p-4 block md:hidden">
     @if (!empty($hasilSeleksi) && count($hasilSeleksi) > 0)
-        <form method="POST" action="{{ route('hasil-seleksi.simpan') }}">
-            @csrf
-            <input type="hidden" name="kecamatan_id" value="{{ $kecamatanId }}">
+    <form method="POST" action="{{ route('hasil-seleksi.simpan') }}">
+        @csrf
+        <input type="hidden" name="kecamatan_id" value="{{ $kecamatanId }}">
 
-            <div class="overflow-x-auto">
-                <table class="min-w-full text-sm text-left text-gray-500">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                        <tr>
-                            <th class="px-2 py-2">#</th>
-                            <th class="px-2 py-2">Kelompok Tani</th>
-                            <th class="px-2 py-2">Ketua</th>
-                            <th class="px-2 py-2">Desa</th>
-                            <th class="px-2 py-2">Nilai</th>
-                            @auth
-                            @if(auth()->user()->role === 'admin')
-                            <th class="px-2 py-2">Pilih</th>
-                            @endif
-                            @endauth
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($hasilSeleksi as $index => $tani)
-                        <tr class="bg-white border-b">
-                            <td class="px-2 py-2">{{ $index + 1 }}</td>
-                            <td class="px-2 py-2">{{ $tani['nama_kelompok_tani'] }}</td>
-                            <td class="px-2 py-2">{{ $tani['ketua'] }}</td>
-                            <td class="px-2 py-2">{{ $tani['desa'] }}</td>
-                            <td class="px-2 py-2">{{ number_format($tani['nilai_wpm'], 4) }}</td>
-                            @auth
-                            @if(auth()->user()->role === 'admin')
-                            <td class="px-2 py-2">
-                                <input type="checkbox" name="kelompok_tani_id[]" value="{{ $tani['kelompok_tani_id'] }}">
-                            </td>
-                            @endif
-                            @endauth
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full text-sm text-left text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                    <tr>
+                        <th class="px-2 py-2">#</th>
+                        <th class="px-2 py-2">Kelompok Tani</th>
+                        <th class="px-2 py-2">Ketua</th>
+                        <th class="px-2 py-2">Desa</th>
+                        <th class="px-2 py-2">Nilai</th>
+                        @auth
+                        @if(auth()->user()->role === 'admin')
+                        <th class="px-2 py-2">Pilih</th>
+                        @endif
+                        @endauth
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($hasilSeleksi as $index => $tani)
+                    <tr class="bg-white border-b">
+                        <td class="px-2 py-2">{{ $index + 1 }}</td>
+                        <td class="px-2 py-2">{{ $tani['nama_kelompok_tani'] }}</td>
+                        <td class="px-2 py-2">{{ $tani['ketua'] }}</td>
+                        <td class="px-2 py-2">{{ $tani['desa'] }}</td>
+                        <td class="px-2 py-2">{{ number_format($tani['nilai_wpm'], 4) }}</td>
+                        @auth
+                        @if(auth()->user()->role === 'admin')
+                        <td class="px-2 py-2">
+                            <input type="checkbox" name="kelompok_tani_id[]" value="{{ $tani['kelompok_tani_id'] }}">
+                        </td>
+                        @endif
+                        @endauth
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
-            @auth
-            @if(auth()->user()->role === 'admin')
-                <button type="submit" class="w-full mt-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">
-                    Simpan Seleksi
-                </button>
-            @endif
-            @endauth
-        </form>
+        @auth
+        @if(auth()->user()->role === 'admin')
+        <button type="submit" class="w-full mt-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">
+            Simpan Seleksi
+        </button>
+        @endif
+        @endauth
+    </form>
     @else
-        <p class="text-gray-600 text-center">Belum ada hasil seleksi untuk kecamatan ini.</p>
+    <p class="text-gray-600 text-center">Belum ada hasil seleksi untuk kecamatan ini.</p>
     @endif
 </div>
-
-
-
-
-
-
 
 
 
@@ -204,4 +231,34 @@ document.addEventListener('click', function(event) {
     }
 });
 </script>
+
+<script>
+function checkRange() {
+    const rangeValue = document.getElementById('rangeInput').value;
+    const checkboxes = document.querySelectorAll('.checkbox-kelompok');
+
+    // Reset semua dulu
+    checkboxes.forEach(cb => cb.checked = false);
+
+    // Cek validitas input
+    const parts = rangeValue.split('-');
+    if (parts.length !== 2) return alert('Masukkan format angka seperti 1-10');
+
+    let start = parseInt(parts[0]);
+    let end = parseInt(parts[1]);
+
+    if (isNaN(start) || isNaN(end) || start > end || start < 1) {
+        return alert('Range tidak valid');
+    }
+
+    // Checklist berdasarkan data-index
+    checkboxes.forEach(cb => {
+        const index = parseInt(cb.dataset.index);
+        if (index >= start && index <= end) {
+            cb.checked = true;
+        }
+    });
+}
+</script>
+
 @endsection
