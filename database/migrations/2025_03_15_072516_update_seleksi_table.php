@@ -12,15 +12,15 @@ return new class extends Migration {
     {
         Schema::table('seleksi', function (Blueprint $table) {
             $table->foreignId('kecamatan_id')->constrained('kecamatan')->onDelete('cascade');
-            $table->string('nama_kelompok_tani');
+            $table->string('nama_kelompok_tani', 50);
             $table->foreignId('kelompok_tani_id');
-            $table->string('ketua');
-            $table->string('desa');
+            $table->string('ketua', 50);
+            $table->string('desa', 50);
             $table->year('tahun');
-            $table->decimal('nilai_wpm', 8, 4); // Menyimpan nilai hasil seleksi
-            $table->integer('peringkat'); // Peringkat hasil seleksi
-            $table->boolean('terpilih')->default(false); // Checkbox untuk status terpilih
-            $table->enum('jenis_tani', ['Padi', 'Palawija', 'Pupuk']); // Jenis Tani
+            $table->decimal('nilai_wpm', 8, 4);
+            $table->integer('peringkat');
+            $table->boolean('terpilih')->default(false);
+            $table->enum('jenis_tani', ['Padi', 'Palawija', 'Pupuk']);
 
         });
     }

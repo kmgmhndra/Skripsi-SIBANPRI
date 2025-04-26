@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->string('nama_laporan');
-            $table->string('kecamatan');
+            $table->string('kecamatan', 50);
             $table->string('jenis_tani');
             $table->date('tanggal_seleksi');
             $table->integer('jumlah_kelompok_tani');

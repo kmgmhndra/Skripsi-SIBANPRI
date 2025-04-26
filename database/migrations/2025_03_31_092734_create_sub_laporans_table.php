@@ -14,9 +14,9 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->foreignId('laporan_id');
-            $table->string('nama_kelompok_tani');
-            $table->string('nama_ketua');
-            $table->string('nama_desa');
+            $table->string('nama_kelompok_tani', 50);
+            $table->string('nama_ketua', 50);
+            $table->string('nama_desa', 50);
             $table->decimal('nilai_wpm', 8, 4); // Menyimpan nilai hasil seleksi
             $table->integer('peringkat'); // Menyimpan nilai hasil seleksi
             $table->foreignId('kelompok_tani_id');

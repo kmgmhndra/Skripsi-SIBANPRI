@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('desas', function (Blueprint $table) {
             $table->id();
-            $table->string("nama");
+            $table->string("nama", 50);
             $table->foreignId("kecamatan_id");
             $table->timestamps();
         });
