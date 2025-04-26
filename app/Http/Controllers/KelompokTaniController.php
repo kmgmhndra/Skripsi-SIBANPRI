@@ -10,6 +10,7 @@ use App\Models\KriteriaValue;
 use Illuminate\Support\Facades\Session;
 use App\Imports\KelompokTaniImport;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 
 class KelompokTaniController extends Controller
@@ -85,8 +86,9 @@ class KelompokTaniController extends Controller
             }
         }
 
-        return redirect()->route('kelompok-tani.index')
-            ->with('success', 'Kelompok Tani berhasil ditambahkan!');
+
+        return redirect()->route('kelompok-tani.index')->with('success', 'Kelompok Tani berhasil ditambahkan!');
+
     }
     public function edit($id)
     {
@@ -160,21 +162,44 @@ class KelompokTaniController extends Controller
     }
 
 
+
+
     public function import(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:xlsx,xls'
+            'file' => 'required|mimes:xlsx,xls',
+            'kecamatan_id' => 'required|exists:kecamatan,id' // Pastikan nama tabel sesuai
         ]);
+
         $kecamatan_id = $request->kecamatan_id;
         $jenis_tani = Session::get('jenis_tani');
         $tahun = Session::get('tahun');
 
-
         try {
             Excel::import(new KelompokTaniImport($kecamatan_id, $jenis_tani, $tahun), $request->file('file'));
-            return back()->with('success', 'Data berhasil diimport');
+
+            // Return dengan flash message untuk SweetAlert
+            return back()->with('alert', [
+                'type' => 'success',
+                'title' => 'Sukses',
+                'message' => 'Data berhasil diimport'
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $errors = implode('<br>', $e->validator->errors()->all());
+
+            return back()->with('alert', [
+                'type' => 'error',
+                'title' => 'Gagal',
+                'message' => $errors
+            ])->withInput();
+
         } catch (\Exception $e) {
-            return back()->with('error', 'Error: ' . $e->getMessage());
+            return back()->with('alert', [
+                'type' => 'error',
+                'title' => 'Gagal',
+                'message' => $e->getMessage()
+            ])->withInput();
         }
     }
 }

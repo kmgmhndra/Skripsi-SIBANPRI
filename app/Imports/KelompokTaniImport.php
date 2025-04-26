@@ -5,10 +5,12 @@ namespace App\Imports;
 use App\Models\KelompokTani;
 use App\Models\Kriteria;
 use App\Models\KriteriaValue;
+use App\Models\Desa; // Tambahkan model Desa
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class KelompokTaniImport implements ToModel, WithHeadingRow, WithValidation
 {
@@ -17,6 +19,7 @@ class KelompokTaniImport implements ToModel, WithHeadingRow, WithValidation
     private $tahun;
     private $jenisTani;
     private $criteriaColumns = [];
+    private $desaNames; // Untuk menyimpan daftar nama desa yang valid
 
     public function __construct($kecamatanId, $jenisTani, $tahun)
     {
@@ -41,18 +44,42 @@ class KelompokTaniImport implements ToModel, WithHeadingRow, WithValidation
             ];
         })->unique()->toArray();
 
+        // Ambil daftar nama desa yang valid untuk kecamatan ini
+        $this->desaNames = Desa::where('kecamatan_id', $this->kecamatanId)
+            ->pluck('nama')
+            ->map(function ($name) {
+                return strtolower(trim($name));
+            })
+            ->toArray();
+
         Log::debug('Kriteria tersedia:', $this->kriterias->keys()->toArray());
         Log::debug('Kolom kriteria yang dicari:', $this->criteriaColumns);
+        Log::debug('Desa yang valid:', $this->desaNames);
     }
 
     public function model(array $row)
     {
+        $desaName = $this->getValue($row, 'desa');
+        $normalizedDesaName = strtolower(trim($desaName));
+
+        if (!in_array($normalizedDesaName, $this->desaNames)) {
+            $availableDesas = implode(', ', array_map('ucfirst', $this->desaNames));
+            throw new \Exception("Desa '{$desaName}' tidak valid. Desa yang tersedia untuk kecamatan ini: {$availableDesas}");
+        }
         Log::debug('Memproses baris:', array_keys($row));
+
+        // Validasi desa (seharusnya sudah divalidasi di rules(), tapi double check)
+        $desaName = $this->getValue($row, 'desa');
+        $normalizedDesaName = strtolower(trim($desaName));
+
+        if (!in_array($normalizedDesaName, $this->desaNames)) {
+            throw new \Exception("Desa '{$desaName}' tidak ditemukan dalam kecamatan yang dipilih");
+        }
 
         // Buat Kelompok Tani
         $kelompokTani = KelompokTani::create([
             'nama' => $this->getValue($row, 'nama'),
-            'desa' => $this->getValue($row, 'desa'),
+            'desa' => ucfirst($desaName),
             'jenis_tani' => $this->jenisTani,
             'tahun' => $this->tahun,
             'status' => $this->getValue($row, 'status') ?? 'tidak_terpilih',
@@ -103,7 +130,12 @@ class KelompokTaniImport implements ToModel, WithHeadingRow, WithValidation
     {
         $baseRules = [
             'nama' => 'required|string',
-            'desa' => 'required|string',
+            'desa' => [
+                'required',
+                'string',
+                // Validasi bahwa desa ada dalam kecamatan yang dipilih
+                Rule::in($this->desaNames)
+            ],
             'status' => 'nullable|in:terpilih,tidak_terpilih',
             'ketua' => 'required|string',
         ];
@@ -125,8 +157,30 @@ class KelompokTaniImport implements ToModel, WithHeadingRow, WithValidation
         return $baseRules;
     }
 
+    public function prepareForValidation($data, $index)
+    {
+        // Normalisasi nama desa untuk pencocokan case-insensitive
+        if (isset($data['desa'])) {
+            $data['desa'] = strtolower(trim($data['desa']));
+        }
+
+        return $data;
+    }
+
     public function headingRow(): int
     {
         return 1;
     }
+
+    public function customValidationMessages()
+    {
+        return [
+            'desa.in' => 'Desa ":input" tidak ditemukan dalam kecamatan yang dipilih. Silakan periksa kembali nama desa atau pilih kecamatan yang sesuai.',
+            'nama.required' => 'Kolom nama kelompok tani harus diisi',
+            'desa.required' => 'Kolom desa harus diisi',
+            'ketua.required' => 'Kolom nama ketua harus diisi',
+            '*.numeric' => 'Kolom kriteria harus berupa angka'
+        ];
+    }
+
 }
