@@ -39,8 +39,8 @@
 
 ### 1️⃣ Clone Repository
 ```bash
-git clone https://github.com/kmgmhndra/Skripsi-SPK.git
-cd Skripsi-SPK
+git clone https://github.com/kmgmhndra/SPK-Distan.git
+cd SPK-Distan
 ```
 
 ### 2️⃣ Install Dependencies
