@@ -39,8 +39,8 @@
 
 ### 1️⃣ Clone Repository
 ```bash
-git clone https://github.com/username/spk-bantuan.git
-cd spk-bantuan
+git clone https://github.com/kmgmhndra/Skripsi-SPK.git
+cd Skripsi-SPK
 ```
 
 ### 2️⃣ Install Dependencies
