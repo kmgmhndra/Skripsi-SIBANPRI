@@ -10,12 +10,13 @@ use App\Models\Seleksi;
 use App\Models\Laporan;
 use App\Models\SubLaporan;
 use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
 
 class HasilSeleksiController extends Controller
 {
     public function index(Request $request)
     {
-        $kecamatanId = $request->input('kecamatan_id', 1);
+        $kecamatanId = $request->input('kecamatan_id');
         $jenisTani = Session::get('jenis_tani');
 
         // dd(request('kecamatan_id'));
@@ -55,7 +56,7 @@ class HasilSeleksiController extends Controller
         $laporan = Laporan::create([
             'nama_laporan' => 'Laporan ' . $kecamatan->nama, // Fixed string concatenation (using . instead of +)
             'kecamatan' => $kecamatan->nama,
-            'tanggal_seleksi' => $seleksi_data->first()->updated_at,
+            'tanggal_seleksi' => Carbon::now(),    
             'jumlah_kelompok_tani' => $seleksi_data->count(),
             'jenis_tani' => $seleksi_data->first()->jenis_tani,
             'tahun' => $tahun,

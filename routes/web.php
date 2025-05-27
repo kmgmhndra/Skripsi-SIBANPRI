@@ -45,7 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/kelompok-tani/import', [KelompokTaniController::class, 'import'])
         ->name('kelompok-tani.import');
     // Resource route kecuali index
-    Route::resource('kelompok-tani', KelompokTaniController::class)->except(['index']);
+    Route::resource('kelompok-tani', KelompokTaniController::class)->except(['index', 'show']);
 
     // Route untuk Hasil Seleksi & Laporan  
     Route::post('/seleksi-proses', [SeleksiController::class, 'proses'])->name('seleksi.proses');
@@ -61,6 +61,8 @@ Route::middleware('auth')->group(function () {
         ->name('laporan.destroy');
 
     Route::get('/set-tahun', [DashboardController::class, 'setTahun'])->name('setTahun');
+
+    Route::get('/kelompok-tani/download-template', [App\Http\Controllers\KelompokTaniController::class, 'downloadTemplate'])->name('kelompok-tani.download-template');
 
 
 });

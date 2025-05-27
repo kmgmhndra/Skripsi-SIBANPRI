@@ -202,4 +202,18 @@ class KelompokTaniController extends Controller
             ])->withInput();
         }
     }
+
+    public function downloadTemplate()
+{
+    $filePath = public_path('templates/template_kelompok_tani.xlsx');
+
+    if (!file_exists($filePath)) {
+        abort(404, 'Template file tidak ditemukan.');
+    }
+
+    return response()->download($filePath, 'template_kelompok_tani.xlsx', [
+        'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    ]);
+}
+
 }

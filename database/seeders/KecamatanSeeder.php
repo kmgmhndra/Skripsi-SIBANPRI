@@ -13,6 +13,7 @@ class KecamatanSeeder extends Seeder
             ['nama' => 'Seririt'],
             ['nama' => 'Busungbiu'],
             ['nama' => 'Banjar'],
+            ['nama' => 'Sukasada'],
             ['nama' => 'Buleleng'],
             ['nama' => 'Sawan'],
             ['nama' => 'Kubutambahan'],

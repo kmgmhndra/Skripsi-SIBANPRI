@@ -24,7 +24,7 @@
                 <p class="text-gray-600">Jumlah Kelompok Tani Terpilih:
                     <span class="font-semibold">{{ $subLaporans->count() }}</span>
                 </p>
-                <p class="text-gray-600">Jenis Kelompok Tani:
+                <p class="text-gray-600">Komoditas:
                     <span class="font-semibold">{{ $subLaporans->first()->laporan->jenis_tani }}</span>
                 </p>
                 <p class="text-gray-600">Tahun Laporan:

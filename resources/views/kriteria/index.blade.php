@@ -25,7 +25,7 @@
 
     <!-- Tabel Kriteria -->
     <div class="overflow-x-auto">
-        <table class="w-full border-collapse border border-gray-300 text-center"> {{-- Tambah text-center di table --}}
+        <table class="w-full border-collapse border border-gray-300 text-center">
             <thead class="bg-gray-100">
                 <tr>
                     <th class="border p-2">Urutan</th>
@@ -43,7 +43,7 @@
                 @foreach ($kriteria as $k)
                 <tr data-id="{{ $k->id }}">
                     <td class="border p-2">{{ $k->urutan }}</td>
-                    <td class="border p-2">{{ $k->nama }}</td>
+                    <td class="border p-2 text-left">{{ $k->nama }}</td>
                     <td class="border p-2">{{ number_format($k->bobot, 4) }}</td>
                     <td class="border p-2">{{ $k->jenis }}</td>
                     @auth

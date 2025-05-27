@@ -97,7 +97,7 @@
             <td>{{ $laporan->jumlah_kelompok_tani }} Kelompok</td>
         </tr>
         <tr>
-            <td>Jenis Tani</td>
+            <td>Komoditas</td>
             <td>{{ $laporan->jenis_tani }}</td>
         </tr>
     </table>

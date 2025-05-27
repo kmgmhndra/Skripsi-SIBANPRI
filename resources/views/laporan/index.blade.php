@@ -11,7 +11,7 @@
                 @php
                     $jenis_tani = Session::get('jenis_tani');
                 @endphp
-                <p class="text-gray-600 mt-1 text-sm sm:text-base">Jenis Tani : {{ $jenis_tani }}</p>
+                <p class="text-gray-600 mt-1 text-sm sm:text-base">Komoditas : {{ $jenis_tani }}</p>
             </div>
         </div>
 
@@ -23,7 +23,8 @@
                     <div>
                         <h2 class="text-lg sm:text-xl font-semibold text-gray-700">{{ $laporan->nama_laporan }}</h2>
                         <p class="text-gray-600 text-sm">Tanggal Seleksi:
-                            {{ \Carbon\Carbon::parse($laporan->tanggal_seleksi)->format('d F Y') }}</p>
+                            {{ \Carbon\Carbon::parse($laporan->created_at)->format('d F Y H:i') }}
+                        </p>
                     </div>
 
                     <div
@@ -60,10 +61,6 @@
             @endforelse
         </div>
     </div>
-
-
-
-
 
 
     <script>

@@ -65,7 +65,7 @@
     <div class="flex items-center gap-2">
         <input type="text" id="rangeInput"
             class="border border-gray-300 rounded-lg p-2 w-36 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder="Contoh: 1-10" oninput="toggleButton()">
+            placeholder="Contoh: 1-10" oninput="validateInput(); toggleButton();">
 
         <button type="button" id="selectButton" onclick="checkRange()"
             class="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
@@ -76,12 +76,19 @@
 </div>
 
 <script>
+// Hanya izinkan angka dan tanda -
+function validateInput() {
+    const input = document.getElementById('rangeInput');
+    input.value = input.value.replace(/[^0-9\-]/g, ''); // Hapus semua kecuali angka dan tanda -
+}
+
 function toggleButton() {
     const input = document.getElementById('rangeInput');
     const button = document.getElementById('selectButton');
     button.disabled = input.value.trim() === '';
 }
 </script>
+
 @endif
 @endauth
 
