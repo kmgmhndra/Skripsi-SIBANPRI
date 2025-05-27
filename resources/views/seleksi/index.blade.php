@@ -102,6 +102,7 @@ function toggleButton() {
     <form method="POST" action="{{ route('hasil-seleksi.simpan') }}">
         @csrf
         <input type="hidden" name="kecamatan_id" value="{{ $kecamatanId }}">
+        <input type="hidden" name="user_id" value="{{ auth()->id() }}">
 
         <table class="w-full border-collapse border">
             <thead class="bg-gray-200 text-gray-700 font-bold uppercase text-sm">
@@ -159,6 +160,8 @@ function toggleButton() {
     <form method="POST" action="{{ route('hasil-seleksi.simpan') }}">
         @csrf
         <input type="hidden" name="kecamatan_id" value="{{ $kecamatanId }}">
+        <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+
 
         <div class="overflow-x-auto">
             <table class="min-w-full text-sm text-left text-gray-500">
@@ -199,15 +202,17 @@ function toggleButton() {
 
         @auth
         @if(auth()->user()->role === 'admin')
-        <button type="submit" class="w-full mt-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">
-            Simpan Seleksi
-        </button>
+        <form action="{{ route('laporan.store') }}" method="POST">
+            @csrf
+            <button type="submit" class="w-full mt-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">
+                Simpan Seleksi
+            </button>
+            @endif
+            @endauth
+        </form>
+        @else
+        <p class="text-gray-600 text-center">Belum ada hasil seleksi untuk kecamatan ini.</p>
         @endif
-        @endauth
-    </form>
-    @else
-    <p class="text-gray-600 text-center">Belum ada hasil seleksi untuk kecamatan ini.</p>
-    @endif
 </div>
 
 

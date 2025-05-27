@@ -64,6 +64,7 @@
                     enctype="multipart/form-data" class="hidden">
                     @csrf
                     <input type="hidden" id="importKecamatanId" name="kecamatan_id">
+                    <input type="hidden" name="user_id" value="{{ auth()->id() }}">
                     <input type="file" id="file-import" name="file" accept=".xlsx,.xls,.csv">
                 </form>
 
@@ -176,6 +177,8 @@
                 @csrf
                 <input type="hidden" name="kecamatan_id" id="selectedKecamatanInput" class="hidden">
                 <input type="hidden" name="jenis_tani" value="{{ $jenisTani }}">
+                <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+
 
                 <div class="mb-3">
                     <input type="text" name="nama" placeholder="Nama Kelompok Tani..." class="w-full p-2 border rounded"
@@ -218,6 +221,7 @@
                 @method('PUT')
                 <input type="hidden" name="kecamatan_id" id="editKecamatanId">
                 <input type="hidden" name="jenis_tani" value="{{ $jenisTani }}">
+                <input type="hidden" name="user_id" value="{{ auth()->id() }}">
 
                 <div class="space-y-3">
                     <div>

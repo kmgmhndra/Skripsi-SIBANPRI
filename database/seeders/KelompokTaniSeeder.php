@@ -9,9 +9,9 @@ class KelompokTaniSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('kelompok_tani')->truncate();
+        DB::table('kelompok_tani')->delete();
 
-        DB::table('users')->truncate();
+        DB::table('users')->delete();
         DB::table('users')->insert([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
@@ -25,68 +25,5 @@ class KelompokTaniSeeder extends Seeder
             'role' => 'petugas'
         ]);
 
-
-        // DB::table('kelompok_tani')->insert([
-        //     [
-        //         'nama' => 'Subak Banyumala',
-        //         'desa' => 'Desa Banyuasri',
-        //         'ketua' => 'Made Suartana',
-        //         'kecamatan_id' => 1, // Kecamatan Gerokgak
-        //         'jenis_tani' => 'Padi',
-        //         'tahun' => 2021,
-
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        //     [
-        //         'nama' => 'Subak Gebang',
-        //         'desa' => 'Desa Subuk',
-        //         'ketua' => 'Ketut Seriada',
-        //         'kecamatan_id' => 1, // Kecamatan Gerokgak
-        //         'jenis_tani' => 'Padi',
-        //         'tahun' => 2021,
-
-
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        //     [
-        //         'nama' => 'Subak Tista',
-        //         'desa' => 'Desa Tista',
-        //         'ketua' => 'Made Sutama',
-        //         'kecamatan_id' => 1, // Kecamatan Gerokgak
-        //         'jenis_tani' => 'Padi',
-        //         'tahun' => 2021,
-
-
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        //     [
-        //         'nama' => 'Subak 1',
-        //         'desa' => 'Desa 1',
-        //         'ketua' => 'Made Gede',
-        //         'kecamatan_id' => 1, // Kecamatan Gerokgak
-        //         'jenis_tani' => 'Palawija',
-        //         'tahun' => 2025,
-
-
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        //     [
-        //         'nama' => 'Subak Keramas',
-        //         'desa' => 'Desa Keramas',
-        //         'ketua' => 'Made Surya',
-        //         'kecamatan_id' => 2,
-        //         'jenis_tani' => 'Palawija',
-        //         'tahun' => 2025,
-
-
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-
-        // ]);
     }
 }

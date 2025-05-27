@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Session;
 use App\Imports\KelompokTaniImport;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Auth;
 
 
 class KelompokTaniController extends Controller
@@ -68,6 +69,7 @@ class KelompokTaniController extends Controller
             'jenis_tani' => $jenisTani,
             'status' => 'tidak_terpilih', // Set default status
             'tahun' => $tahun,
+            'user_id' => Auth::id()
         ]);
 
         // Simpan data kelompok tani
@@ -176,7 +178,7 @@ class KelompokTaniController extends Controller
         $tahun = Session::get('tahun');
 
         try {
-            Excel::import(new KelompokTaniImport($kecamatan_id, $jenis_tani, $tahun), $request->file('file'));
+            Excel::import(new KelompokTaniImport($kecamatan_id, $jenis_tani, $tahun, auth()->id()), $request->file('file'));
 
             // Return dengan flash message untuk SweetAlert
             return back()->with('alert', [

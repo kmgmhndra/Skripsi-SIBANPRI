@@ -11,6 +11,7 @@ use App\Models\Laporan;
 use App\Models\SubLaporan;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class HasilSeleksiController extends Controller
 {
@@ -60,6 +61,7 @@ class HasilSeleksiController extends Controller
             'jumlah_kelompok_tani' => $seleksi_data->count(),
             'jenis_tani' => $seleksi_data->first()->jenis_tani,
             'tahun' => $tahun,
+            'user_id' => Auth::id()
         ]);
 
         // Create sub-reports

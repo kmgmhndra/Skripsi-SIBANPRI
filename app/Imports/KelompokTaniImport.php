@@ -21,11 +21,12 @@ class KelompokTaniImport implements ToModel, WithHeadingRow, WithValidation
     private $criteriaColumns = [];
     private $desaNames; // Untuk menyimpan daftar nama desa yang valid
 
-    public function __construct($kecamatanId, $jenisTani, $tahun)
+    public function __construct($kecamatanId, $jenisTani, $tahun, $userId)
     {
         $this->kecamatanId = $kecamatanId;
         $this->jenisTani = $jenisTani;
         $this->tahun = $tahun;
+        $this->userId = $userId;
 
         // Load all criteria from database and create search variations
         $this->kriterias = Kriteria::all()->mapWithKeys(function ($item) {
@@ -85,6 +86,7 @@ class KelompokTaniImport implements ToModel, WithHeadingRow, WithValidation
             'status' => $this->getValue($row, 'status') ?? 'tidak_terpilih',
             'kecamatan_id' => $this->kecamatanId,
             'ketua' => $this->getValue($row, 'ketua'),
+            'user_id' => $this->userId,
         ]);
 
         // Process all possible criteria columns

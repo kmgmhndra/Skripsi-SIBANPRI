@@ -9,10 +9,40 @@ use App\Models\SubLaporan;
 use App\Models\KelompokTani;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 
 class LaporanController extends Controller
 {
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama_laporan' => 'required|string|max:255',
+            'kecamatan' => 'required|string|max:255',
+            'tanggal_seleksi' => 'required|date',
+            'jumlah_kelompok_tani' => 'required|integer',
+            'jenis_tani' => 'required|string',
+            'tahun' => 'required|digits:4|integer',
+        ]);
+
+        try {
+            $laporan = new Laporan();
+            $laporan->nama_laporan = $request->nama_laporan;
+            $laporan->kecamatan = $request->kecamatan;
+            $laporan->tanggal_seleksi = $request->tanggal_seleksi;
+            $laporan->jumlah_kelompok_tani = $request->jumlah_kelompok_tani;
+            $laporan->jenis_tani = $request->jenis_tani;
+            $laporan->tahun = $request->tahun;
+            $laporan->user_id = Auth::id(); // <<-- Ini penting untuk menyimpan user_id
+            $laporan->save();
+
+            return redirect()->route('laporan.index')->with('success', 'Laporan berhasil disimpan.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menyimpan laporan: ' . $e->getMessage());
+        }
+    }
+
     public function index()
     {
         $tahun = Session::get('tahun');

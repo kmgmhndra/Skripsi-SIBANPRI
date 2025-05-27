@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class KelompokTani extends Model
 {
@@ -23,7 +24,8 @@ class KelompokTani extends Model
         'provitas',
         'status',
         'jenis_tani',
-        'tahun'
+        'tahun',
+        'user_id'
     ];
 
 
