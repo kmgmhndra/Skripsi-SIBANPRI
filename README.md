@@ -2,7 +2,7 @@
 <h3 align="center">Pemilihan Penerima Prioritas Bantuan Benih Tanaman Pangan</h3>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Laravel-10.x-red?style=flat&logo=laravel">
+  <img src="https://img.shields.io/badge/Laravel-11.x-red?style=flat&logo=laravel">
   <img src="https://img.shields.io/badge/TailwindCSS-3.x-blue?style=flat&logo=tailwind-css">
   <img src="https://img.shields.io/badge/MySQL-8.x-orange?style=flat&logo=mysql">
 </p>
