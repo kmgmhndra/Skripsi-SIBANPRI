@@ -39,8 +39,8 @@
 
 ### 1️⃣ Clone Repository
 ```bash
-git clone https://github.com/kmgmhndra/SPK-Distan.git
-cd SPK-Distan
+git clone https://github.com/kmgmhndra/Skripsi-SIBANPRI.git
+cd Skripsi-SIBANPRI
 ```
 
 ### 2️⃣ Install Dependencies
