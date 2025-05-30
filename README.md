@@ -78,11 +78,7 @@ php artisan serve
 
 ---
 
-## 📄 Lisensi
 
-Proyek ini dirilis di bawah lisensi **MIT**.
-
----
 ## 👨‍💻 Developer
 
 Dikembangkan oleh **Komang Mahendra** © 2025.  
