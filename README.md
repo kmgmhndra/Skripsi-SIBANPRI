@@ -9,7 +9,7 @@
 
 ---
 
-📌 **SPK Pemilihan Penerima Prioritas Bantuan Benih Tanaman Pangan** atau didalam aplikasi disebut BANPRI (Bantuan Prioritas) adalah aplikasi berbasis web yang dirancang untuk membantu Dinas Pertanian dalam menentukan kelompok tani yang berhak menerima bantuan benih secara lebih objektif menggunakan metode **ROC (Rank Order Centroid) & WPM (Weighted Product Method)**.
+📌 **SPK Pemilihan Penerima Prioritas Bantuan Benih Tanaman Pangan** atau didalam aplikasi disebut SIBANPRI (Sistem Informasi Bantuan Prioritas) adalah aplikasi berbasis web yang dirancang untuk membantu Dinas Pertanian dalam menentukan kelompok tani yang berhak menerima bantuan benih secara lebih objektif menggunakan metode **ROC (Rank Order Centroid) & WPM (Weighted Product Method)**.
 
 ---
 
