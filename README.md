@@ -27,7 +27,7 @@
 
 ## 🛠️ Teknologi yang Digunakan
 
-- 🏗 **Laravel 10** → Backend Development  
+- 🏗 **Laravel 11** → Backend Development  
 - 🎨 **Tailwind CSS** → UI/UX Modern  
 - 🗄 **MySQL** → Database Management  
 - 📊 **Laravel Excel** → Impor/Ekspor Data  
